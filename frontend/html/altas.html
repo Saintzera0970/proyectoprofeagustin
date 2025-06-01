@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión - Altas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="../dist/output.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-primary to-primary-dark p-4 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                <div class="flex items-center space-x-2">
+                    <span id="datetime" class="text-sm bg-white/10 px-3 py-1 rounded-full">
+                    </span>
+                </div>
+                <nav class="flex flex-wrap justify-center gap-2 md:gap-6">
+                    <button onclick="window.location.href='home.html'" class="flex items-center gap-2 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
+                        <i data-lucide="home" class="w-[18px] h-[18px]"></i>
+                        <span class="hidden md:inline">INICIO</span>
+                    </button>
+                    <button onclick="window.location.href='stock.html'" class="flex items-center gap-2 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
+                        <i data-lucide="package" class="w-[18px] h-[18px]"></i>
+                        <span class="hidden md:inline">STOCK</span>
+                    </button>
+                    <button onclick="window.location.href='ventas.html'" class="flex items-center gap-2 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
+                        <i data-lucide="shopping-cart" class="w-[18px] h-[18px]"></i>
+                        <span class="hidden md:inline">VENTAS</span>
+                    </button>
+                    <button class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
+                        <i data-lucide="user-plus" class="w-[18px] h-[18px]"></i>
+                        <span class="hidden md:inline">ALTAS</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto p-4 md:p-6">
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Sistema de Altas</h1>
+
+        <!-- Tabs -->
+        <div class="mb-6">
+            <nav class="flex space-x-2 border-b border-gray-200" aria-label="Tabs">
+                <button 
+                    onclick="showTab('productos')"
+                    class="tab-button active" 
+                    data-tab="productos"
+                >
+                    <i data-lucide="package" class="w-5 h-5"></i>
+                    Productos
+                </button>
+                <button 
+                    onclick="showTab('empleados')"
+                    class="tab-button" 
+                    data-tab="empleados"
+                >
+                    <i data-lucide="users" class="w-5 h-5"></i>
+                    Empleados
+                </button>
+                <button 
+                    onclick="showTab('clientes')"
+                    class="tab-button" 
+                    data-tab="clientes"
+                >
+                    <i data-lucide="user" class="w-5 h-5"></i>
+                    Clientes
+                </button>
+                <button 
+                    onclick="showTab('usuarios')"
+                    class="tab-button" 
+                    data-tab="usuarios"
+                >
+                    <i data-lucide="user-cog" class="w-5 h-5"></i>
+                    Usuarios
+                </button>
+            </nav>
+        </div>
+
+        <!-- Formularios -->
+        <div id="productos" class="tab-content active">
+            <div class="card">
+                <h2 class="text-xl font-bold mb-4">Alta de Producto</h2>
+                <form class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" placeholder="Código" class="input-field">
+                    <input type="text" placeholder="Nombre del producto" class="input-field">
+                    <input type="number" placeholder="Precio" class="input-field">
+                    <input type="number" placeholder="Stock inicial" class="input-field">
+                    <input type="text" placeholder="Categoría" class="input-field">
+                    <input type="text" placeholder="Proveedor" class="input-field">
+                    <textarea placeholder="Descripción" class="input-field md:col-span-2" rows="2"></textarea>
+                    <div class="md:col-span-2 flex justify-end space-x-2">
+                        <button type="reset" class="px-4 py-2 border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition-all">
+                            Limpiar
+                        </button>
+                        <button type="submit" class="btn-primary">
+                            Guardar Producto
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="empleados" class="tab-content hidden">
+            <div class="card">
+                <h2 class="text-xl font-bold mb-4">Alta de Empleado</h2>
+                <form class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" placeholder="Nombre" class="input-field">
+                    <input type="text" placeholder="Apellido" class="input-field">
+                    <input type="text" placeholder="DNI" class="input-field">
+                    <input type="email" placeholder="Email" class="input-field">
+                    <input type="tel" placeholder="Teléfono" class="input-field">
+                    <input type="text" placeholder="Cargo" class="input-field">
+                    <input type="text" placeholder="Dirección" class="input-field md:col-span-2">
+                    <div class="md:col-span-2 flex justify-end space-x-2">
+                        <button type="reset" class="px-4 py-2 border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition-all">
+                            Limpiar
+                        </button>
+                        <button type="submit" class="btn-primary">
+                            Guardar Empleado
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="clientes" class="tab-content hidden">
+            <div class="card">
+                <h2 class="text-xl font-bold mb-4">Alta de Cliente</h2>
+                <form class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" placeholder="Nombre/Razón Social" class="input-field">
+                    <input type="text" placeholder="DNI/CUIT" class="input-field">
+                    <input type="email" placeholder="Email" class="input-field">
+                    <input type="tel" placeholder="Teléfono" class="input-field">
+                    <input type="text" placeholder="Dirección" class="input-field">
+                    <select class="input-field">
+                        <option value="">Tipo de Cliente</option>
+                        <option value="regular">Regular</option>
+                        <option value="cuenta_corriente">Cuenta Corriente</option>
+                    </select>
+                    <div class="cuenta-corriente-fields hidden md:col-span-2 space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="number" placeholder="Límite de Crédito" class="input-field">
+                            <input type="text" placeholder="Referencias Comerciales" class="input-field">
+                        </div>
+                    </div>
+                    <div class="md:col-span-2 flex justify-end space-x-2">
+                        <button type="reset" class="px-4 py-2 border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition-all">
+                            Limpiar
+                        </button>
+                        <button type="submit" class="btn-primary">
+                            Guardar Cliente
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="usuarios" class="tab-content hidden">
+            <div class="card">
+                <h2 class="text-xl font-bold mb-4">Alta de Usuario</h2>
+                <form class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" placeholder="Nombre de Usuario" class="input-field">
+                    <select class="input-field">
+                        <option value="">Rol</option>
+                        <option value="admin">Administrador</option>
+                        <option value="vendedor">Vendedor</option>
+                        <option value="supervisor">Supervisor</option>
+                    </select>
+                    <input type="password" placeholder="Contraseña" class="input-field">
+                    <input type="password" placeholder="Confirmar Contraseña" class="input-field">
+                    <select class="input-field md:col-span-2">
+                        <option value="">Empleado Asociado</option>
+                        <option value="1">Juan Pérez</option>
+                        <option value="2">María García</option>
+                    </select>
+                    <div class="md:col-span-2 flex justify-end space-x-2">
+                        <button type="reset" class="px-4 py-2 border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition-all">
+                            Limpiar
+                        </button>
+                        <button type="submit" class="btn-primary">
+                            Guardar Usuario
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .tab-button {
+            @apply px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 
+            whitespace-nowrap flex items-center gap-2 border-b-2 border-transparent;
+        }
+        .tab-button.active {
+            @apply border-primary text-primary;
+        }
+        .tab-content {
+            @apply transition-all duration-300 ease-in-out;
+        }
+        .tab-content.hidden {
+            @apply opacity-0;
+        }
+        .tab-content.active {
+            @apply opacity-100;
+        }
+    </style>
+
+    <script src="../js/altas.js"></script>
+</body>
+</html> 

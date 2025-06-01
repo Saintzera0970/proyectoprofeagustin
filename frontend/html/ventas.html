@@ -350,9 +350,32 @@
                     </div>
                 </div>
 
+                <!-- Campos adicionales -->
+                <div class="space-y-4 mt-6">
+                    <div>
+                        <label class="text-sm text-gray-600 mb-1 block">Descripción de la venta</label>
+                        <textarea 
+                            id="ventaDescripcion"
+                            class="input-field w-full" 
+                            rows="2" 
+                            placeholder="Agregar una descripción para esta venta..."
+                        ></textarea>
+                    </div>
+                    <div class="flex items-center">
+                        <input 
+                            type="checkbox" 
+                            id="ventaDelivery" 
+                            class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                        >
+                        <label for="ventaDelivery" class="ml-2 text-sm text-gray-600">
+                            Incluye delivery
+                        </label>
+                    </div>
+                </div>
+
                 <!-- Botones de Acción -->
                 <div class="space-y-3 animate-fade-in" style="animation-delay: 0.4s">
-                    <button class="btn-primary w-full h-12 flex items-center justify-center gap-2 group">
+                    <button class="btn-primary w-full h-12 flex items-center justify-center gap-2 group" id="finalizarVentaBtn">
                         <i data-lucide="check-circle" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
                         Finalizar Venta
                     </button>

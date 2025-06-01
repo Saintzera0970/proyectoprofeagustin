@@ -1,6 +1,9 @@
 // Inicializar los iconos de Lucide
 lucide.createIcons();
 
+// Agregar event listener para el botón Finalizar Venta
+document.getElementById('finalizarVentaBtn').addEventListener('click', finalizarVenta);
+
 // Variables globales para cuenta corriente
 let clienteSeleccionado = null;
 
@@ -452,42 +455,79 @@ function actualizarEstadoCuenta() {
     }
 }
 
-async function finalizarVenta() {
+// Función para crear el objeto de venta
+function crearObjetoVenta() {
     const metodoPago = document.querySelector('input[name="payment_method"]:checked');
-    if (!metodoPago) {
-        mostrarNotificacion('Error', 'Seleccione un método de pago', 'error');
-        return;
-    }
+    const productos = obtenerProductosVenta();
+    const total = parseFloat(document.querySelector('[data-total="total"]').textContent.replace('$', '')) || 0;
+    
+    const venta = {
+        clientName: clienteSeleccionado ? clienteSeleccionado.nombre : "Cliente General",
+        payMethod: metodoPago ? metodoPago.value : "efectivo",
+        delivery: document.getElementById('ventaDelivery').checked,
+        totalAmount: total,
+        description: document.getElementById('ventaDescripcion').value.trim(),
+        productId: productos.map(producto => ({
+            id: parseInt(document.querySelector(`tr[data-codigo]`).getAttribute('data-codigo')),
+            quantity: producto.cantidad
+        }))
+    };
 
-    if (metodoPago.value === 'cuenta_corriente') {
-        if (!clienteSeleccionado) {
-            mostrarNotificacion('Error', 'Seleccione un cliente para la cuenta corriente', 'error');
+    return venta;
+}
+
+async function finalizarVenta() {
+    try {
+        // Validaciones básicas
+        const productos = obtenerProductosVenta();
+        if (productos.length === 0) {
+            mostrarNotificacion('Error', 'No hay productos en la venta');
             return;
         }
 
-        const montoNuevaCompra = obtenerTotalActual();
-        const deudaResultante = clienteSeleccionado.deuda + montoNuevaCompra;
-
-        if (deudaResultante > clienteSeleccionado.limiteCredito) {
-            mostrarNotificacion('Error', 'La compra excede el límite de crédito', 'error');
+        const metodoPago = document.querySelector('input[name="payment_method"]:checked');
+        if (!metodoPago) {
+            mostrarNotificacion('Error', 'Seleccione un método de pago');
             return;
         }
 
-        // Aquí iría la lógica para guardar la venta y actualizar la deuda del cliente
+        // Validaciones específicas por método de pago
+        if (metodoPago.value === 'cuenta_corriente' && !clienteSeleccionado) {
+            mostrarNotificacion('Error', 'Seleccione un cliente para cuenta corriente');
+            return;
+        }
+
+        // Crear el objeto de venta
+        const objetoVenta = crearObjetoVenta();
+        console.log('Objeto de venta creado:', objetoVenta);
+
+        // Aquí puedes agregar la lógica para enviar el objeto de venta al servidor
         try {
-            await guardarVentaCuentaCorriente({
-                clienteId: clienteSeleccionado.id,
-                monto: montoNuevaCompra,
-                productos: obtenerProductosVenta(),
-                fecha: new Date().toISOString()
+            const response = await fetch('/api/ventas', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(objetoVenta)
             });
 
-            mostrarNotificacion('Éxito', 'Venta registrada en cuenta corriente', 'success');
+            if (!response.ok) {
+                throw new Error('Error al enviar la venta al servidor');
+            }
+
+            // Mostrar notificación de éxito
+            mostrarNotificacion('Éxito', 'Venta finalizada correctamente');
+
+            // Limpiar el formulario
             cancelarVenta();
         } catch (error) {
-            mostrarNotificacion('Error', 'No se pudo registrar la venta', 'error');
-            console.error('Error al guardar la venta:', error);
+            console.error('Error al enviar la venta:', error);
+            mostrarNotificacion('Error', 'Error al enviar la venta al servidor');
         }
+        
+    } catch (error) {
+        console.error('Error al finalizar la venta:', error);
+        mostrarNotificacion('Error', 'Ocurrió un error al finalizar la venta');
     }
 }
 
@@ -505,6 +545,10 @@ function obtenerProductosVenta() {
         productos.push({ nombre, cantidad, precio });
     });
     return productos;
+}
+
+function returnventas(){
+    const ventas = obtenerProductosVenta();
 }
 
 // Modificar la función actualizarTotales para que actualice también el estado de cuenta

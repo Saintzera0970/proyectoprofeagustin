@@ -117,14 +117,11 @@
         </div>
 
         <!-- Tabla de Productos -->
-        <div class="card overflow-hidden">
+        <div class="card overflow-hidden" id="productsTable">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Código
-                            </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Producto
                             </th>
@@ -146,94 +143,6 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200" id="productsTableBody">
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                PRD001
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center">
-                                    <div>
-                                        <div class="text-sm font-medium text-gray-900">
-                                            Producto 1
-                                        </div>
-                                        <div class="text-sm text-gray-500">
-                                            Descripción del producto 1
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                Electrónica
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <span class="text-sm text-gray-900">10</span>
-                                    <button class="ml-2 text-primary hover:text-primary-dark" onclick="adjustStock(1)">
-                                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                                    </button>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                $1,500
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                    En stock
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button class="text-blue-600 hover:text-blue-900 mx-1" onclick="editProduct(1)">
-                                    <i data-lucide="pencil" class="w-4 h-4"></i>
-                                </button>
-                                <button class="text-red-600 hover:text-red-900 mx-1" onclick="deleteProduct(1)">
-                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                PRD002
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center">
-                                    <div>
-                                        <div class="text-sm font-medium text-gray-900">
-                                            Producto 2
-                                        </div>
-                                        <div class="text-sm text-gray-500">
-                                            Descripción del producto 2
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                Hogar
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <span class="text-sm text-gray-900">5</span>
-                                    <button class="ml-2 text-primary hover:text-primary-dark" onclick="adjustStock(2)">
-                                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                                    </button>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                $2,500
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                    Stock bajo
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button class="text-blue-600 hover:text-blue-900 mx-1" onclick="editProduct(2)">
-                                    <i data-lucide="pencil" class="w-4 h-4"></i>
-                                </button>
-                                <button class="text-red-600 hover:text-red-900 mx-1" onclick="deleteProduct(2)">
-                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                </button>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -264,7 +173,7 @@
             </div>
         </div>
     </div>
-
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="../js/stock.js"></script>
 </body>
 </html> 

@@ -62,24 +62,27 @@
         <div class="max-w-7xl mx-auto">
             <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                 <div class="flex items-center space-x-4">
-                    <div class="text-2xl font-bold">Sistema de Gestión</div>
                     <span id="datetime" class="text-sm bg-white/10 px-3 py-1 rounded-full hidden md:inline-block">
                     </span>
+                    <button onclick="window.location.href='historial-ventas.html'" class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg hover:bg-white/20 transition-all">
+                        <i data-lucide="history" class="w-5 h-5"></i>
+                        <span class="hidden md:inline">Ver Historial</span>
+                    </button>
                 </div>
                 <nav class="flex flex-wrap justify-center gap-3 md:gap-4">
-                    <button onclick="window.location.href='home.html'" class="flex items-center gap-3 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
+                    <button onclick="window.location.href='home.html'" class="flex items-center gap-2 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
                         <i data-lucide="home" class="w-[18px] h-[18px]"></i>
                         <span class="hidden md:inline">INICIO</span>
                     </button>
-                    <button onclick="window.location.href='stock.html'" class="flex items-center gap-3 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
+                    <button onclick="window.location.href='stock.html'" class="flex items-center gap-2 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
                         <i data-lucide="package" class="w-[18px] h-[18px]"></i>
                         <span class="hidden md:inline">STOCK</span>
                     </button>
-                    <button class="flex items-center gap-3 bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base hover:bg-white/20">
+                    <button class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
                         <i data-lucide="shopping-cart" class="w-[18px] h-[18px]"></i>
                         <span class="hidden md:inline">VENTAS</span>
                     </button>
-                    <button onclick="window.location.href='altas.html'" class="flex items-center gap-3 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
+                    <button onclick="window.location.href='altas.html'" class="flex items-center gap-2 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
                         <i data-lucide="user-plus" class="w-[18px] h-[18px]"></i>
                         <span class="hidden md:inline">ALTAS</span>
                     </button>
@@ -387,6 +390,24 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal de Detalles -->
+    <div id="modalDetalles" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold">Detalles de la Venta</h3>
+                    <button onclick="cerrarModal()" class="text-gray-400 hover:text-gray-600">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+                <div id="detallesVenta">
+                    <!-- Los detalles se cargarán dinámicamente aquí -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="../js/funciones.js"></script>
     <script src="../js/ventas.js"></script>
 </body>

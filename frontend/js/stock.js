@@ -1,15 +1,36 @@
 // Inicializar los iconos de Lucide
 lucide.createIcons();
 
-// Variable global para almacenar el ID del producto en edición
-let editingProductId = null;
-
+// Función para actualizar la fecha y hora
 function updateDateTime() {
     const now = new Date();
-    const date = now.toLocaleDateString();
-    const time = now.toLocaleTimeString();
-    document.getElementById('datetime').textContent = `${date} - ${time}`;
+    const options = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric'
+    };
+    
+    const fecha = now.toLocaleDateString('es-ES', options);
+    const hora = now.toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    });
+    
+    // Formatear la primera letra en mayúscula
+    const fechaFormateada = fecha.charAt(0).toUpperCase() + fecha.slice(1);
+    
+    document.getElementById('datetime').textContent = `${fechaFormateada} - ${hora}`;
 }
+
+// Actualizar fecha y hora cada segundo
+setInterval(updateDateTime, 1000);
+updateDateTime();
+
+// Variable global para almacenar el ID del producto en edición
+let editingProductId = null;
 
 function toggleNewProduct(isEditing = false) {
     const form = document.getElementById('newProductForm');
@@ -192,10 +213,6 @@ async function adjustStock(productId, delta = 1) {
         mostrarNotificacion('Error', 'No se pudo actualizar el stock', 'error');
     }
 }
-
-// Actualizar fecha y hora cada segundo
-setInterval(updateDateTime, 1000);
-updateDateTime(); 
 
 async function cargadeproducto() {
     const productosTableBody = document.getElementById('productsTableBody');

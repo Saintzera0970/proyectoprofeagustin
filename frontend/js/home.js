@@ -1,6 +1,7 @@
 // Inicializar los iconos de Lucide
 lucide.createIcons();
 
+// Función para actualizar la fecha y hora
 function updateDateTime() {
     const now = new Date();
     const options = { 
@@ -9,21 +10,22 @@ function updateDateTime() {
         month: 'long', 
         day: 'numeric'
     };
-    const timeOptions = {
+    
+    const fecha = now.toLocaleDateString('es-ES', options);
+    const hora = now.toLocaleTimeString('es-ES', {
         hour: '2-digit',
         minute: '2-digit',
-        second: '2-digit'
-    };
+        second: '2-digit',
+        hour12: false
+    });
     
-    const date = now.toLocaleDateString('es-ES', options);
-    const time = now.toLocaleTimeString('es-ES', timeOptions);
+    // Formatear la primera letra en mayúscula
+    const fechaFormateada = fecha.charAt(0).toUpperCase() + fecha.slice(1);
     
-    document.getElementById('datetime').textContent = `${date} - ${time}`;
-    document.getElementById('userDate').textContent = date;
-    document.getElementById('userTime').textContent = time;
+    document.getElementById('datetime').textContent = `${fechaFormateada} - ${hora}`;
 }
 
-// Update datetime every second
+// Actualizar fecha y hora cada segundo
 setInterval(updateDateTime, 1000);
 updateDateTime();
 

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión - Historial de Ventas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="../dist/output.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .card {
+            @apply bg-white rounded-xl shadow-sm p-6 transition-all duration-300;
+        }
+        .input-field {
+            @apply w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-200;
+        }
+        .btn-primary {
+            @apply bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark transition-all duration-200 focus:ring-2 focus:ring-primary/20;
+        }
+        .btn-secondary {
+            @apply bg-white text-gray-700 px-6 py-2 rounded-lg border-2 border-gray-200 hover:bg-gray-50 transition-all duration-200 focus:ring-2 focus:ring-gray-200;
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-primary to-primary-dark p-4 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                <div class="flex items-center space-x-4">
+                    <span id="datetime" class="text-sm bg-white/10 px-3 py-1 rounded-full hidden md:inline-block">
+                    </span>
+                </div>
+                <nav class="flex flex-wrap justify-center gap-3 md:gap-4">
+                    <button onclick="window.location.href='home.html'" class="flex items-center gap-2 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
+                        <i data-lucide="home" class="w-[18px] h-[18px]"></i>
+                        <span class="hidden md:inline">INICIO</span>
+                    </button>
+                    <button onclick="window.location.href='stock.html'" class="flex items-center gap-2 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
+                        <i data-lucide="package" class="w-[18px] h-[18px]"></i>
+                        <span class="hidden md:inline">STOCK</span>
+                    </button>
+                    <button onclick="window.location.href='ventas.html'" class="flex items-center gap-2 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
+                        <i data-lucide="shopping-cart" class="w-[18px] h-[18px]"></i>
+                        <span class="hidden md:inline">VENTAS</span>
+                    </button>
+                    <button onclick="window.location.href='altas.html'" class="flex items-center gap-2 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
+                        <i data-lucide="user-plus" class="w-[18px] h-[18px]"></i>
+                        <span class="hidden md:inline">ALTAS</span>
+                    </button>
+                    <button class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
+                        <i data-lucide="history" class="w-[18px] h-[18px]"></i>
+                        <span class="hidden md:inline">HISTORIAL</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto p-4 md:p-6">
+        <!-- Filtros -->
+        <div class="card mb-6 animate-fade-in">
+            <h2 class="text-xl font-semibold mb-4">Filtros de Búsqueda</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="text-sm text-gray-600 mb-1 block">Fecha desde</label>
+                    <input type="date" class="input-field" id="fechaDesde">
+                </div>
+                <div>
+                    <label class="text-sm text-gray-600 mb-1 block">Fecha hasta</label>
+                    <input type="date" class="input-field" id="fechaHasta">
+                </div>
+                <div>
+                    <label class="text-sm text-gray-600 mb-1 block">Cliente</label>
+                    <input type="text" class="input-field" placeholder="Buscar por nombre..." id="clienteFilter">
+                </div>
+                <div>
+                    <label class="text-sm text-gray-600 mb-1 block">Método de pago</label>
+                    <select class="input-field" id="metodoPagoFilter">
+                        <option value="">Todos</option>
+                        <option value="efectivo">Efectivo</option>
+                        <option value="tarjeta">Tarjeta</option>
+                        <option value="transferencia">Transferencia</option>
+                        <option value="cuenta_corriente">Cuenta Corriente</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex justify-end mt-4">
+                <button class="btn-primary flex items-center gap-2" onclick="aplicarFiltros()">
+                    <i data-lucide="filter" class="w-4 h-4"></i>
+                    Aplicar Filtros
+                </button>
+            </div>
+        </div>
+
+        <!-- Resumen -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="card bg-primary/5 animate-fade-in" style="animation-delay: 0.1s">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Total Ventas</p>
+                        <p class="text-2xl font-bold text-primary" id="totalVentas">0</p>
+                    </div>
+                    <div class="h-12 w-12 bg-primary/10 rounded-xl flex items-center justify-center">
+                        <i data-lucide="shopping-cart" class="w-6 h-6 text-primary"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card bg-green-50 animate-fade-in" style="animation-delay: 0.2s">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Ingresos Totales</p>
+                        <p class="text-2xl font-bold text-green-600" id="ingresosTotales">$0.00</p>
+                    </div>
+                    <div class="h-12 w-12 bg-green-100 rounded-xl flex items-center justify-center">
+                        <i data-lucide="dollar-sign" class="w-6 h-6 text-green-600"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card bg-blue-50 animate-fade-in" style="animation-delay: 0.3s">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Productos Vendidos</p>
+                        <p class="text-2xl font-bold text-blue-600" id="productosVendidos">0</p>
+                    </div>
+                    <div class="h-12 w-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                        <i data-lucide="package" class="w-6 h-6 text-blue-600"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card bg-amber-50 animate-fade-in" style="animation-delay: 0.4s">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Promedio por Venta</p>
+                        <p class="text-2xl font-bold text-amber-600" id="promedioVenta">$0.00</p>
+                    </div>
+                    <div class="h-12 w-12 bg-amber-100 rounded-xl flex items-center justify-center">
+                        <i data-lucide="trending-up" class="w-6 h-6 text-amber-600"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de Ventas -->
+        <div class="card animate-fade-in" style="animation-delay: 0.5s">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-semibold">Historial de Ventas</h2>
+                <button class="btn-secondary flex items-center gap-2" onclick="exportarVentas()">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    Exportar
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Método de Pago</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Delivery</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="tablaVentas">
+                        <!-- Las ventas se cargarán dinámicamente aquí -->
+                    </tbody>
+                </table>
+            </div>
+            <!-- Paginación -->
+            <div class="flex justify-between items-center mt-4">
+                <div class="text-sm text-gray-600">
+                    Mostrando <span id="resultadosActuales">0</span> de <span id="totalResultados">0</span> resultados
+                </div>
+                <div class="flex gap-2">
+                    <button class="btn-secondary" onclick="cambiarPagina('anterior')" id="btnAnterior">
+                        <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                    </button>
+                    <button class="btn-secondary" onclick="cambiarPagina('siguiente')" id="btnSiguiente">
+                        <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Detalles -->
+    <div id="modalDetalles" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold">Detalles de la Venta</h3>
+                    <button onclick="cerrarModal()" class="text-gray-400 hover:text-gray-600">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+                <div id="detallesVenta">
+                    <!-- Los detalles se cargarán dinámicamente aquí -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/funciones.js"></script>
+    <script src="../js/historial-ventas.js"></script>
+</body>
+</html> 

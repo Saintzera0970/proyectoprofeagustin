@@ -1,6 +1,8 @@
 import express from 'express';
 import conn from "./src/conection.js"
 import { router } from './src/router.js';
+import { UploadOrders } from './src/utils.js/uploadVentas.js';
+import { UploadProducts } from './src/utils.js/upload_productos.js';
 
 const server = express()
 
@@ -17,6 +19,8 @@ server.use(express.urlencoded({ extended: true }));
 server.use('/',router)
 conn.conn.sync({force:true}).then(()=>{
     server.listen(1000, () => {
+      UploadOrders()
+      UploadProducts()
          console.log('Server run in url : http://localhost:1000/');
        });
 })

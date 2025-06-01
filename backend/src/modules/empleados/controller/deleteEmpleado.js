@@ -1,16 +1,16 @@
-import  {Cliente}  from '../../../conection.js'; // Asegurate de que la ruta sea correcta
+import  {Empleado}  from '../../../conection.js'; // Asegurate de que la ruta sea correcta
 
-export const deleteCliente = async (id) => {
+export const deleteEmpleado = async (id) => {
   try {
-    const cliente = await Cliente.findByPk(id);
+    const empleado = await Empleado.findByPk(id);
 
-    if (!cliente) {
+    if (!empleado) {
       throw new Error('Cliente no encontrado');
     }
 
     // Eliminación lógica: desactivar el cliente
-    cliente.status = false;
-    await cliente.save();
+    empleado.status = false;
+    await empleado.save();
 
     return { id, message: 'Cliente desactivado correctamente' };
   } catch (error) {

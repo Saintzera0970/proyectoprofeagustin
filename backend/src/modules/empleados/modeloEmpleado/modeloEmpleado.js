@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 
 export default (sequelize) => {
-  return sequelize.define('Cliente', {
+  return sequelize.define('Empleado', {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -11,23 +11,20 @@ export default (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        isEmail: true,
-      },
-    },
     telefono: {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    rol: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     status: {
         type: DataTypes.BOOLEAN,
+        defaultValue: true
     }
   }, {
-    tableName: 'clientes',
+    tableName: 'empleados',
     timestamps: false,
   });
 }; 

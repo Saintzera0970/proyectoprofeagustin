@@ -25,7 +25,6 @@ export default (sequelize) => {
     },
     status: {
         type: DataTypes.BOOLEAN,
-        defaultValue: true,
     }
   }, {
     tableName: 'clientes',

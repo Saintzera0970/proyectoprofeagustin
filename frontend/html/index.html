@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="../dist/output.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+  <body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-[1024px] grid md:grid-cols-2 gap-8 items-center">
+        <!-- Sección de Bienvenida -->
+        <div class="text-center md:text-left space-y-6">
+            <div class="space-y-4">
+                <h1 class="text-4xl md:text-6xl font-bold">
+                    <span class="bg-gradient-to-r from-primary to-primary-dark text-transparent bg-clip-text">
+                        SISTEMA DE
+                    </span>
+                    <br/>
+                    <span class="bg-gradient-to-r from-primary-dark to-primary text-transparent bg-clip-text">
+                        GESTIÓN
+                    </span>
+                </h1>
+                <p class="text-gray-600 text-lg md:text-xl">
+                    Administra tu negocio de manera eficiente y segura
+                </p>
+            </div>
+            <div class="hidden md:block space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="bg-primary/10 p-3 rounded-lg">
+                        <i data-lucide="package" class="w-6 h-6 text-primary"></i>
+                    </div>
+                    <p class="text-gray-600">Control de stock en tiempo real</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="bg-primary/10 p-3 rounded-lg">
+                        <i data-lucide="shopping-cart" class="w-6 h-6 text-primary"></i>
+                    </div>
+                    <p class="text-gray-600">Gestión de ventas simplificada</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="bg-primary/10 p-3 rounded-lg">
+                        <i data-lucide="users" class="w-6 h-6 text-primary"></i>
+                    </div>
+                    <p class="text-gray-600">Administración de clientes y empleados</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulario de Login -->
+        <div class="card backdrop-blur-sm bg-white/80 shadow-xl">
+            <div class="text-center mb-8">
+                <div class="inline-block p-3 rounded-full bg-primary/10 mb-4">
+                    <i data-lucide="user" class="w-8 h-8 text-primary"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800">Iniciar Sesión</h2>
+                <p class="text-gray-600 mt-2">Ingresa tus credenciales para continuar</p>
+            </div>
+
+            <form class="space-y-6">
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700 block">
+                        Usuario
+                    </label>
+                    <div class="relative">
+                        <i data-lucide="user" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5"></i>
+                        <input 
+                            type="text"
+                            class="input-field pl-12" 
+                            placeholder="Ingrese su usuario"
+                            id="username"
+                        >
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700 block">
+                        Contraseña
+                    </label>
+                    <div class="relative">
+                        <i data-lucide="lock" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5"></i>
+                        <input
+                            type="password"
+                            class="input-field pl-12"
+                            placeholder="Ingrese su contraseña"
+                            id="password"
+                        >
+                        <button 
+                            type="button"
+                            onclick="togglePassword()"
+                            class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                        >
+                            <i data-lucide="eye" class="w-5 h-5" id="passwordToggleIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between text-sm">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
+                        <span class="text-gray-600">Recordarme</span>
+                    </label>
+                    <a href="#" class="text-primary hover:text-primary-dark">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <button 
+                    type="button"
+                    onclick="window.location.href='home.html'"
+                    class="btn-primary w-full h-12 flex items-center justify-center gap-2 text-lg"
+                >
+                    <i data-lucide="log-in" class="w-5 h-5"></i>
+                    Ingresar
+                </button>
+            </form>
+
+            <div class="mt-6 pt-6 border-t border-gray-200 text-center">
+                <p class="text-sm text-gray-600">
+                    ¿Necesitas ayuda? Contacta a 
+                    <a href="#" class="text-primary hover:text-primary-dark font-medium">Soporte Técnico</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/index.js"></script>
+  </body>
+</html> 

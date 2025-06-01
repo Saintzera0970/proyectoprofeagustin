@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión - Ventas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="../dist/output.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .card {
+            @apply bg-white rounded-xl shadow-sm p-6 transition-all duration-300;
+        }
+        .input-field {
+            @apply w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-200;
+        }
+        .btn-primary {
+            @apply bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark transition-all duration-200 focus:ring-2 focus:ring-primary/20;
+        }
+        .btn-secondary {
+            @apply bg-white text-gray-700 px-6 py-2 rounded-lg border-2 border-gray-200 hover:bg-gray-50 transition-all duration-200 focus:ring-2 focus:ring-gray-200;
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .product-item {
+            @apply hover:bg-gray-50 transition-all duration-200;
+        }
+        .payment-method {
+            @apply flex items-center space-x-3 p-4 rounded-lg border-2 border-transparent hover:border-primary/20 transition-all duration-200 cursor-pointer;
+        }
+        .payment-method.selected {
+            @apply border-primary bg-primary/5;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-primary to-primary-dark p-4 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                <div class="flex items-center space-x-4">
+                    <div class="text-2xl font-bold">Sistema de Gestión</div>
+                    <span id="datetime" class="text-sm bg-white/10 px-3 py-1 rounded-full hidden md:inline-block">
+                    </span>
+                </div>
+                <nav class="flex flex-wrap justify-center gap-3 md:gap-4">
+                    <button onclick="window.location.href='home.html'" class="flex items-center gap-2 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
+                        <i data-lucide="home" class="w-[18px] h-[18px]"></i>
+                        <span class="hidden md:inline">INICIO</span>
+                    </button>
+                    <button onclick="window.location.href='stock.html'" class="flex items-center gap-2 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
+                        <i data-lucide="package" class="w-[18px] h-[18px]"></i>
+                        <span class="hidden md:inline">STOCK</span>
+                    </button>
+                    <button class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base hover:bg-white/20">
+                        <i data-lucide="shopping-cart" class="w-[18px] h-[18px]"></i>
+                        <span class="hidden md:inline">VENTAS</span>
+                    </button>
+                    <button onclick="window.location.href='altas.html'" class="flex items-center gap-2 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
+                        <i data-lucide="user-plus" class="w-[18px] h-[18px]"></i>
+                        <span class="hidden md:inline">ALTAS</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto p-4 md:p-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Panel de Venta -->
+            <div class="lg:col-span-2 space-y-6">
+                <div class="card animate-fade-in">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">Nueva Venta</h2>
+                            <p class="text-gray-600">Ticket #0001</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-600">Fecha</p>
+                            <p class="font-medium" id="saleDate"></p>
+                        </div>
+                    </div>
+                    
+                    <!-- Búsqueda de Productos -->
+                    <div class="relative mb-6">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5"></i>
+                        <input 
+                            type="text" 
+                            placeholder="Buscar producto por código o nombre..." 
+                            class="input-field pl-10"
+                            onkeyup="searchProducts(this.value)"
+                        >
+                        <button class="absolute right-2 top-1/2 transform -translate-y-1/2 text-primary hover:text-primary-dark">
+                            <i data-lucide="barcode" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+
+                    <!-- Lista de Productos -->
+                    <div class="overflow-x-auto rounded-lg border border-gray-200">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Producto</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cantidad</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subtotal</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="productList">
+                                <!-- Ejemplo de producto -->
+                                <tr class="product-item">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <div class="h-10 w-10 flex-shrink-0 bg-primary/10 rounded-lg flex items-center justify-center">
+                                                <i data-lucide="package" class="w-5 h-5 text-primary"></i>
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">Producto Ejemplo</div>
+                                                <div class="text-sm text-gray-500">SKU: 123456</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center space-x-2">
+                                            <button class="text-gray-400 hover:text-primary">
+                                                <i data-lucide="minus-circle" class="w-5 h-5"></i>
+                                            </button>
+                                            <input type="number" value="1" class="w-16 text-center input-field py-1">
+                                            <button class="text-gray-400 hover:text-primary">
+                                                <i data-lucide="plus-circle" class="w-5 h-5"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">$99.99</td>
+                                    <td class="px-6 py-4 text-sm font-medium text-gray-900">$99.99</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button class="text-red-400 hover:text-red-600">
+                                            <i data-lucide="trash-2" class="w-5 h-5"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Totales -->
+                    <div class="border-t border-gray-200 mt-6 pt-4 space-y-3">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-600">Subtotal:</span>
+                            <span class="font-medium">$99.99</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-600">IVA (21%):</span>
+                            <span class="font-medium">$21.00</span>
+                        </div>
+                        <div class="flex justify-between text-xl font-bold text-primary">
+                            <span>Total:</span>
+                            <span>$120.99</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cliente -->
+                <div class="card animate-fade-in" style="animation-delay: 0.2s">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                        <i data-lucide="user" class="w-5 h-5 text-primary"></i>
+                        Información del Cliente
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="relative">
+                            <input 
+                                type="text" 
+                                placeholder="Buscar cliente por nombre o DNI..." 
+                                class="input-field"
+                            >
+                            <button class="absolute right-2 top-1/2 transform -translate-y-1/2 text-primary hover:text-primary-dark">
+                                <i data-lucide="search" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                        <button 
+                            onclick="window.location.href='altas.html?tab=clientes'"
+                            class="btn-primary flex items-center justify-center gap-2"
+                        >
+                            <i data-lucide="user-plus" class="w-5 h-5"></i>
+                            Nuevo Cliente
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel de Pago -->
+            <div class="space-y-6">
+                <div class="card animate-fade-in" style="animation-delay: 0.3s">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                        <i data-lucide="credit-card" class="w-5 h-5 text-primary"></i>
+                        Método de Pago
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="payment-method" onclick="selectPaymentMethod('efectivo')">
+                            <input type="radio" name="payment_method" id="efectivo" value="efectivo" class="text-primary focus:ring-primary">
+                            <label for="efectivo" class="flex items-center gap-2 flex-1">
+                                <i data-lucide="banknote" class="w-5 h-5 text-gray-600"></i>
+                                <span class="font-medium">Efectivo</span>
+                            </label>
+                        </div>
+
+                        <div class="payment-method" onclick="selectPaymentMethod('transferencia')">
+                            <input type="radio" name="payment_method" id="transferencia" value="transferencia" class="text-primary focus:ring-primary">
+                            <label for="transferencia" class="flex items-center gap-2 flex-1">
+                                <i data-lucide="credit-card" class="w-5 h-5 text-gray-600"></i>
+                                <span class="font-medium">Transferencia</span>
+                            </label>
+                        </div>
+
+                        <div class="payment-method" onclick="selectPaymentMethod('cuenta_corriente')">
+                            <input type="radio" name="payment_method" id="cuenta_corriente" value="cuenta_corriente" class="text-primary focus:ring-primary">
+                            <label for="cuenta_corriente" class="flex items-center gap-2 flex-1">
+                                <i data-lucide="landmark" class="w-5 h-5 text-gray-600"></i>
+                                <span class="font-medium">Cuenta Corriente</span>
+                            </label>
+                        </div>
+
+                        <!-- Campos específicos por método de pago -->
+                        <div id="efectivo_fields" class="payment-fields hidden space-y-4 mt-6 p-4 bg-gray-50 rounded-lg">
+                            <div class="space-y-2">
+                                <label class="text-sm text-gray-600">Monto recibido</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                                    <input type="number" placeholder="0.00" class="input-field pl-8" onchange="calcularVuelto(this.value)">
+                                </div>
+                            </div>
+                            <div class="flex justify-between text-sm font-medium">
+                                <span class="text-gray-600">Vuelto:</span>
+                                <span class="text-primary" id="vuelto">$0.00</span>
+                            </div>
+                        </div>
+
+                        <div id="transferencia_fields" class="payment-fields hidden space-y-4 mt-6">
+                            <input type="text" placeholder="Número de operación" class="input-field">
+                            <div class="p-4 bg-gray-50 rounded-lg space-y-2">
+                                <p class="text-sm font-medium text-gray-700">Datos de transferencia:</p>
+                                <div class="flex items-center justify-between">
+                                    <p class="text-sm text-gray-600">CBU:</p>
+                                    <p class="text-sm font-medium">0000000000000000000000</p>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <p class="text-sm text-gray-600">Alias:</p>
+                                    <p class="text-sm font-medium">EMPRESA.VENTAS</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="cuenta_corriente_fields" class="payment-fields hidden space-y-4 mt-6">
+                            <div class="p-4 bg-gray-50 rounded-lg space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-gray-600">Límite de crédito:</span>
+                                    <span class="text-sm font-medium">$50,000</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-gray-600">Saldo utilizado:</span>
+                                    <span class="text-sm font-medium text-amber-600">$20,000</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-gray-600">Saldo disponible:</span>
+                                    <span class="text-sm font-medium text-green-600">$30,000</span>
+                                </div>
+                                <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                    <div class="h-full bg-primary" style="width: 40%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="space-y-3 animate-fade-in" style="animation-delay: 0.4s">
+                    <button class="btn-primary w-full h-12 flex items-center justify-center gap-2 group">
+                        <i data-lucide="check-circle" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
+                        Finalizar Venta
+                    </button>
+                    <button class="btn-secondary w-full h-12 flex items-center justify-center gap-2">
+                        <i data-lucide="x-circle" class="w-5 h-5"></i>
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/ventas.js"></script>
+</body>
+</html> 

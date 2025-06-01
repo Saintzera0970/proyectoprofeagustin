@@ -1,6 +1,13 @@
 // Inicializar los iconos de Lucide
 lucide.createIcons();
 
+// Variables de paginación
+let paginaActual = 1;
+let elementosPorPagina = 10;
+let productos = [];
+let productosFiltrados = [];
+let timeoutId = null;
+
 // Función para actualizar la fecha y hora
 function updateDateTime() {
     const now = new Date();
@@ -29,6 +36,189 @@ function updateDateTime() {
 setInterval(updateDateTime, 1000);
 updateDateTime();
 
+// Función para normalizar texto (quitar acentos y convertir a minúsculas)
+function normalizeText(text) {
+    if (!text) return '';
+    return text.toString().toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim();
+}
+
+// Función para filtrar productos
+function filterProducts(query) {
+    query = normalizeText(query);
+    
+    // Filtrar los productos
+    productosFiltrados = !query ? [...productos] : productos.filter(producto => {
+        const searchableFields = [
+            normalizeText(producto.name),
+            normalizeText(producto.category),
+            normalizeText(producto.description),
+            normalizeText(producto.id),
+            normalizeText(producto.price),
+            normalizeText(producto.stock)
+        ];
+        
+        return searchableFields.some(field => field.includes(query));
+    });
+
+    // Actualizar la tabla con los resultados filtrados
+    actualizarTabla();
+}
+
+// Función para actualizar la tabla
+function actualizarTabla() {
+    const productosTableBody = document.getElementById('productsTableBody');
+    const inicio = (paginaActual - 1) * elementosPorPagina;
+    const fin = inicio + elementosPorPagina;
+    const productosPagina = productosFiltrados.slice(inicio, fin);
+
+    // Limpiar la tabla
+    productosTableBody.innerHTML = '';
+
+    // Si no hay productos, mostrar mensaje
+    if (productosFiltrados.length === 0) {
+        productosTableBody.innerHTML = `
+            <tr>
+                <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                    <div class="flex flex-col items-center justify-center space-y-2">
+                        <i data-lucide="search-x" class="w-8 h-8 text-gray-400"></i>
+                        <p>No se encontraron productos</p>
+                    </div>
+                </td>
+            </tr>
+        `;
+        lucide.createIcons();
+        actualizarBotonesPaginacion();
+        return;
+    }
+
+    // Agregar los productos filtrados a la tabla
+    productosPagina.forEach(producto => {
+        const row = document.createElement('tr');
+        row.className = 'transition-all duration-300 ease-in-out';
+        row.innerHTML = `
+            <td class="px-6 py-4">
+                <div class="flex items-center">
+                    <div>
+                        <div class="text-sm font-medium text-gray-900">
+                            ${producto.name}
+                        </div>
+                        <div class="text-sm text-gray-500">
+                            ${producto.description || 'Sin descripción'}
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                ${producto.category}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                    <button class="mr-2 text-primary hover:text-primary-dark" onclick="adjustStock(${producto.id}, -1)">
+                        <i data-lucide="minus-circle" class="w-4 h-4"></i>
+                    </button>
+                    <span class="text-sm text-gray-900">${producto.stock}</span>
+                    <button class="ml-2 text-primary hover:text-primary-dark" onclick="adjustStock(${producto.id}, 1)">
+                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                $${parseFloat(producto.price || 0).toFixed(2)}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${producto.stock > 10 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                    ${producto.stock > 10 ? 'En Stock' : 'Stock Bajo'}
+                </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <button onclick="editProduct(${producto.id})" class="text-primary hover:text-primary-dark mr-2">
+                    <i data-lucide="edit" class="w-5 h-5"></i>
+                </button>
+                <button onclick="deleteProduct(${producto.id})" class="text-red-600 hover:text-red-900">
+                    <i data-lucide="trash-2" class="w-5 h-5"></i>
+                </button>
+            </td>
+        `;
+        productosTableBody.appendChild(row);
+    });
+
+    lucide.createIcons();
+    actualizarBotonesPaginacion();
+}
+
+// Función para cambiar el número de elementos por página
+function cambiarElementosPorPagina(valor) {
+    elementosPorPagina = parseInt(valor);
+    paginaActual = 1;
+    actualizarTabla();
+}
+
+// Función para cambiar de página
+function cambiarPagina(direccion) {
+    const totalPaginas = Math.ceil(productosFiltrados.length / elementosPorPagina);
+    
+    if (direccion === 'anterior' && paginaActual > 1) {
+        paginaActual--;
+    } else if (direccion === 'siguiente' && paginaActual < totalPaginas) {
+        paginaActual++;
+    } else if (typeof direccion === 'number' && direccion >= 1 && direccion <= totalPaginas) {
+        paginaActual = direccion;
+    }
+    
+    actualizarTabla();
+}
+
+// Función para actualizar los botones de paginación
+function actualizarBotonesPaginacion() {
+    const totalPaginas = Math.ceil(productosFiltrados.length / elementosPorPagina);
+    const btnAnterior = document.getElementById('btnAnterior');
+    const btnSiguiente = document.getElementById('btnSiguiente');
+    const numeroPaginas = document.getElementById('numeroPaginas');
+    const paginaInicio = document.getElementById('paginaInicio');
+    const paginaFin = document.getElementById('paginaFin');
+    const totalElementos = document.getElementById('totalElementos');
+    
+    // Actualizar estado de los botones
+    btnAnterior.disabled = paginaActual === 1;
+    btnSiguiente.disabled = paginaActual === totalPaginas;
+
+    // Actualizar números de página
+    numeroPaginas.innerHTML = '';
+    for (let i = 1; i <= totalPaginas; i++) {
+        const botonPagina = document.createElement('button');
+        botonPagina.className = `relative inline-flex items-center px-4 py-2 border ${paginaActual === i ? 'bg-primary text-white' : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'}`;
+        botonPagina.textContent = i;
+        botonPagina.onclick = () => cambiarPagina(i);
+        numeroPaginas.appendChild(botonPagina);
+    }
+
+    // Actualizar información de elementos mostrados
+    const inicio = productosFiltrados.length === 0 ? 0 : ((paginaActual - 1) * elementosPorPagina) + 1;
+    const fin = Math.min(paginaActual * elementosPorPagina, productosFiltrados.length);
+    
+    paginaInicio.textContent = inicio;
+    paginaFin.textContent = fin;
+    totalElementos.textContent = productosFiltrados.length;
+}
+
+// Cargar productos al iniciar
+async function cargadeproducto() {
+    try {
+        productos = await fetchProducts();
+        productosFiltrados = [...productos];
+        actualizarTabla();
+    } catch (error) {
+        console.error('Error al cargar productos:', error);
+        mostrarNotificacion('Error', 'No se pudieron cargar los productos', 'error');
+    }
+}
+
+// Iniciar la carga de productos
+cargadeproducto();
+
 // Variable global para almacenar el ID del producto en edición
 let editingProductId = null;
 
@@ -53,11 +243,6 @@ function toggleNewProduct(isEditing = false) {
         form.classList.add('hidden');
         editingProductId = null;
     }
-}
-
-function filterProducts(query) {
-    // Implementar filtrado de productos
-    console.log('Filtrando productos:', query);
 }
 
 async function editProduct(productId) {
@@ -213,62 +398,3 @@ async function adjustStock(productId, delta = 1) {
         mostrarNotificacion('Error', 'No se pudo actualizar el stock', 'error');
     }
 }
-
-async function cargadeproducto() {
-    const productosTableBody = document.getElementById('productsTableBody');
-    productosTableBody.innerHTML = ''; // Limpiar la tabla antes de cargar
-
-    const productos = await fetchProducts();
-    for (const element of productos) {
-        const productRow = document.createElement('tr');
-        productRow.setAttribute('data-product-id', element.id);
-        productRow.innerHTML = `
-            <td class="px-6 py-4">
-                <div class="flex items-center">
-                    <div>
-                        <div class="text-sm font-medium text-gray-900">
-                            ${element.name}
-                        </div>
-                        <div class="text-sm text-gray-500">
-                            ${element.description || 'Sin descripción'}
-                        </div>
-                    </div>
-                </div>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                ${element.category}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex items-center">
-                    <button class="mr-2 text-primary hover:text-primary-dark" onclick="adjustStock(${element.id}, -1)">
-                        <i data-lucide="minus-circle" class="w-4 h-4"></i>
-                    </button>
-                    <span class="text-sm text-gray-900">${element.stock}</span>
-                    <button class="ml-2 text-primary hover:text-primary-dark" onclick="adjustStock(${element.id}, 1)">
-                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                    </button>
-                </div>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                $${element.price}    
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-                <span class="px-2 inline-flex text-xs leading-5 font-semibold ${element.stock < 5 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}">
-                    ${element.stock < 5 ? 'Stock bajo' : 'En stock'}
-                </span>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <button class="text-blue-600 hover:text-blue-900 mx-1" onclick="editProduct(${element.id})">
-                    <i data-lucide="pencil" class="w-4 h-4"></i>
-                </button>
-                <button class="text-red-600 hover:text-red-900 mx-1" onclick="deleteProduct(${element.id})">
-                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                </button>
-            </td>`;
-        
-        productosTableBody.appendChild(productRow);
-    }
-    lucide.createIcons();
-}
-
-cargadeproducto();

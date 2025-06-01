@@ -7,6 +7,41 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="../dist/output.css" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        #productsTableBody tr {
+            transition: all 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes fadeOutLeft {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+        }
+        
+        .fade-in {
+            animation: fadeInLeft 0.3s ease-in-out forwards;
+        }
+        
+        .fade-out {
+            animation: fadeOutLeft 0.3s ease-in-out forwards;
+        }
+    </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
     <!-- Header -->
@@ -49,8 +84,8 @@
                     <input 
                         type="text" 
                         placeholder="Buscar productos..." 
-                        class="input-field pl-10"
-                        onkeyup="filterProducts(this.value)"
+                        class="input-field pl-10 w-full"
+                        oninput="filterProducts(this.value)"
                     >
                 </div>
                 <button
@@ -159,22 +194,30 @@
             </div>
             <!-- Paginación -->
             <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div class="flex-1 flex items-center justify-between">
                     <div>
                         <p class="text-sm text-gray-700">
-                            Mostrando <span class="font-medium">1</span> a <span class="font-medium">2</span> de <span class="font-medium">2</span> resultados
+                            Mostrando <span class="font-medium" id="paginaInicio">0</span> a <span class="font-medium" id="paginaFin">0</span> de <span class="font-medium" id="totalElementos">0</span> resultados
                         </p>
                     </div>
-                    <div>
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center text-sm text-gray-700">
+                            <span class="mr-2">Elementos por página:</span>
+                            <select id="elementosPorPagina" class="border border-gray-300 rounded-md px-2 py-1" onchange="cambiarElementosPorPagina(this.value)">
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
                         <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                            <button class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <button id="btnAnterior" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" onclick="cambiarPagina('anterior')" disabled>
                                 <span class="sr-only">Anterior</span>
                                 <i data-lucide="chevron-left" class="w-5 h-5"></i>
                             </button>
-                            <button class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-                                1
-                            </button>
-                            <button class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <div id="numeroPaginas" class="flex">
+                                <!-- Los números de página se generarán dinámicamente -->
+                            </div>
+                            <button id="btnSiguiente" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" onclick="cambiarPagina('siguiente')" disabled>
                                 <span class="sr-only">Siguiente</span>
                                 <i data-lucide="chevron-right" class="w-5 h-5"></i>
                             </button>

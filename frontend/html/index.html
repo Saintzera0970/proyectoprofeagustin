@@ -58,7 +58,7 @@
                 <p class="text-gray-600 mt-2">Ingresa tus credenciales para continuar</p>
             </div>
 
-            <form class="space-y-6">
+            <form class="space-y-6" onsubmit="return false">
                 <div class="space-y-2">
                     <label class="text-sm font-medium text-gray-700 block">
                         Usuario
@@ -70,6 +70,7 @@
                             class="input-field pl-12" 
                             placeholder="Ingrese su usuario"
                             id="username"
+                            oninput="validarCredenciales()"
                         >
                     </div>
                 </div>
@@ -85,6 +86,7 @@
                             class="input-field pl-12"
                             placeholder="Ingrese su contraseña"
                             id="password"
+                            oninput="validarCredenciales()"
                         >
                         <button 
                             type="button"
@@ -106,8 +108,9 @@
 
                 <button 
                     type="button"
-                    onclick="window.location.href='home.html'"
-                    class="btn-primary w-full h-12 flex items-center justify-center gap-2 text-lg"
+                    id="loginButton"
+                    class="btn-primary w-full h-12 flex items-center justify-center gap-2 text-lg opacity-50 cursor-not-allowed"
+                    disabled
                 >
                     <i data-lucide="log-in" class="w-5 h-5"></i>
                     Ingresar

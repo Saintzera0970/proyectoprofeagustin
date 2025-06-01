@@ -71,26 +71,34 @@
                     type="text" 
                     placeholder="Nombre del producto" 
                     class="input-field"
+                    required
                 >
                 <input 
                     type="text" 
                     placeholder="Código" 
                     class="input-field"
+                    required
                 >
                 <input 
                     type="number" 
                     placeholder="Precio" 
                     class="input-field"
+                    required
+                    min="0"
+                    step="0.01"
                 >
                 <input 
                     type="number" 
                     placeholder="Stock inicial" 
                     class="input-field"
+                    required
+                    min="0"
                 >
                 <input 
                     type="text" 
                     placeholder="Categoría" 
                     class="input-field"
+                    required
                 >
                 <input 
                     type="text" 
@@ -110,7 +118,10 @@
                 >
                     Cancelar
                 </button>
-                <button class="btn-primary">
+                <button 
+                    onclick="guardarProducto()"
+                    class="btn-primary"
+                >
                     Guardar
                 </button>
             </div>
@@ -174,6 +185,7 @@
         </div>
     </div>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="../js/funciones.js"></script>
     <script src="../js/stock.js"></script>
 </body>
 </html> 

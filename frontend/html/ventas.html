@@ -36,6 +36,24 @@
         .payment-method.selected {
             @apply border-primary bg-primary/5;
         }
+        /* Estilo para la barra de scroll */
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
     </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -49,19 +67,19 @@
                     </span>
                 </div>
                 <nav class="flex flex-wrap justify-center gap-3 md:gap-4">
-                    <button onclick="window.location.href='home.html'" class="flex items-center gap-2 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
+                    <button onclick="window.location.href='home.html'" class="flex items-center gap-3 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
                         <i data-lucide="home" class="w-[18px] h-[18px]"></i>
                         <span class="hidden md:inline">INICIO</span>
                     </button>
-                    <button onclick="window.location.href='stock.html'" class="flex items-center gap-2 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
+                    <button onclick="window.location.href='stock.html'" class="flex items-center gap-3 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
                         <i data-lucide="package" class="w-[18px] h-[18px]"></i>
                         <span class="hidden md:inline">STOCK</span>
                     </button>
-                    <button class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base hover:bg-white/20">
+                    <button class="flex items-center gap-3 bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base hover:bg-white/20">
                         <i data-lucide="shopping-cart" class="w-[18px] h-[18px]"></i>
                         <span class="hidden md:inline">VENTAS</span>
                     </button>
-                    <button onclick="window.location.href='altas.html'" class="flex items-center gap-2 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
+                    <button onclick="window.location.href='altas.html'" class="flex items-center gap-3 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
                         <i data-lucide="user-plus" class="w-[18px] h-[18px]"></i>
                         <span class="hidden md:inline">ALTAS</span>
                     </button>
@@ -88,16 +106,25 @@
                     
                     <!-- Búsqueda de Productos -->
                     <div class="relative mb-6">
-                        <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5"></i>
-                        <input 
-                            type="text" 
-                            placeholder="Buscar producto por código o nombre..." 
-                            class="input-field pl-10"
-                            onkeyup="searchProducts(this.value)"
-                        >
-                        <button class="absolute right-2 top-1/2 transform -translate-y-1/2 text-primary hover:text-primary-dark">
-                            <i data-lucide="barcode" class="w-5 h-5"></i>
-                        </button>
+                        <div class="flex-1">
+                            <div class="relative">
+                                <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5"></i>
+                                <input 
+                                    type="text" 
+                                    placeholder="Buscar producto por código o nombre..." 
+                                    class="input-field pl-10 text-lg w-full"
+                                    onkeyup="searchProducts(this.value)"
+                                >
+                                <button class="absolute right-2 top-1/2 transform -translate-y-1/2 text-primary hover:text-primary-dark">
+                                    <i data-lucide="barcode" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                            
+                            <!-- Contenedor de Resultados de Búsqueda -->
+                            <div id="resultadosBusqueda" class="absolute z-50 top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-200 max-h-[420px] overflow-y-auto hidden divide-y divide-gray-100 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 w-full">
+                                <!-- Los resultados se agregarán dinámicamente aquí -->
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Lista de Productos -->
@@ -113,38 +140,7 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200" id="productList">
-                                <!-- Ejemplo de producto -->
-                                <tr class="product-item">
-                                    <td class="px-6 py-4">
-                                        <div class="flex items-center">
-                                            <div class="h-10 w-10 flex-shrink-0 bg-primary/10 rounded-lg flex items-center justify-center">
-                                                <i data-lucide="package" class="w-5 h-5 text-primary"></i>
-                                            </div>
-                                            <div class="ml-4">
-                                                <div class="text-sm font-medium text-gray-900">Producto Ejemplo</div>
-                                                <div class="text-sm text-gray-500">SKU: 123456</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <div class="flex items-center space-x-2">
-                                            <button class="text-gray-400 hover:text-primary">
-                                                <i data-lucide="minus-circle" class="w-5 h-5"></i>
-                                            </button>
-                                            <input type="number" value="1" class="w-16 text-center input-field py-1">
-                                            <button class="text-gray-400 hover:text-primary">
-                                                <i data-lucide="plus-circle" class="w-5 h-5"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 text-sm text-gray-900">$99.99</td>
-                                    <td class="px-6 py-4 text-sm font-medium text-gray-900">$99.99</td>
-                                    <td class="px-6 py-4 text-right">
-                                        <button class="text-red-400 hover:text-red-600">
-                                            <i data-lucide="trash-2" class="w-5 h-5"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                                <!-- Los productos se agregarán dinámicamente aquí -->
                             </tbody>
                         </table>
                     </div>
@@ -153,15 +149,15 @@
                     <div class="border-t border-gray-200 mt-6 pt-4 space-y-3">
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-600">Subtotal:</span>
-                            <span class="font-medium">$99.99</span>
+                            <span class="font-medium" data-total="subtotal">$0.00</span>
                         </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-gray-600">IVA (21%):</span>
-                            <span class="font-medium">$21.00</span>
+                        <div id="recargo-transferencia" class="flex justify-between text-sm hidden">
+                            <span class="text-gray-600">Recargo transferencia:</span>
+                            <span class="font-medium text-amber-600" data-total="recargo">$0.00</span>
                         </div>
                         <div class="flex justify-between text-xl font-bold text-primary">
                             <span>Total:</span>
-                            <span>$120.99</span>
+                            <span data-total="total">$0.00</span>
                         </div>
                     </div>
                 </div>
@@ -242,36 +238,112 @@
                         </div>
 
                         <div id="transferencia_fields" class="payment-fields hidden space-y-4 mt-6">
-                            <input type="text" placeholder="Número de operación" class="input-field">
-                            <div class="p-4 bg-gray-50 rounded-lg space-y-2">
-                                <p class="text-sm font-medium text-gray-700">Datos de transferencia:</p>
-                                <div class="flex items-center justify-between">
-                                    <p class="text-sm text-gray-600">CBU:</p>
-                                    <p class="text-sm font-medium">0000000000000000000000</p>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="text-sm text-gray-600 mb-1 block">Porcentaje de recargo</label>
+                                    <div class="relative">
+                                        <input 
+                                            type="number" 
+                                            placeholder="0" 
+                                            class="input-field pr-8 text-right" 
+                                            value="10"
+                                            min="0"
+                                            max="100"
+                                            onchange="actualizarRecargoTransferencia(this.value)"
+                                        >
+                                        <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
+                                    </div>
                                 </div>
-                                <div class="flex items-center justify-between">
-                                    <p class="text-sm text-gray-600">Alias:</p>
-                                    <p class="text-sm font-medium">EMPRESA.VENTAS</p>
+                                <div class="p-4 bg-gray-50 rounded-lg space-y-2">
+                                    <p class="text-sm font-medium text-gray-700">Datos de transferencia:</p>
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-sm text-gray-600">CBU:</p>
+                                        <p class="text-sm font-medium">0000000000000000000000</p>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-sm text-gray-600">Alias:</p>
+                                        <p class="text-sm font-medium">EMPRESA.VENTAS</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <div id="cuenta_corriente_fields" class="payment-fields hidden space-y-4 mt-6">
-                            <div class="p-4 bg-gray-50 rounded-lg space-y-3">
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm text-gray-600">Límite de crédito:</span>
-                                    <span class="text-sm font-medium">$50,000</span>
+                            <div class="space-y-4">
+                                <!-- Selector de Cliente -->
+                                <div>
+                                    <label class="text-sm text-gray-600 mb-1 block">Cliente</label>
+                                    <div class="relative">
+                                        <input 
+                                            type="text" 
+                                            placeholder="Buscar cliente..." 
+                                            class="input-field pr-10"
+                                            onkeyup="buscarClientes(this.value)"
+                                        >
+                                        <button class="absolute right-2 top-1/2 transform -translate-y-1/2 text-primary hover:text-primary-dark">
+                                            <i data-lucide="search" class="w-5 h-5"></i>
+                                        </button>
+                                    </div>
+                                    <!-- Resultados de búsqueda de clientes -->
+                                    <div id="resultadosClientes" class="absolute z-50 mt-1 w-full bg-white rounded-lg shadow-lg border border-gray-200 max-h-48 overflow-y-auto hidden divide-y divide-gray-100">
+                                    </div>
                                 </div>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm text-gray-600">Saldo utilizado:</span>
-                                    <span class="text-sm font-medium text-amber-600">$20,000</span>
+
+                                <!-- Información del Cliente Seleccionado -->
+                                <div id="infoCliente" class="hidden">
+                                    <div class="p-4 bg-white rounded-lg border border-gray-200 space-y-3">
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <h4 class="font-medium text-gray-900" id="nombreCliente">-</h4>
+                                                <p class="text-sm text-gray-500" id="dniCliente">DNI: -</p>
+                                            </div>
+                                            <button onclick="limpiarClienteSeleccionado()" class="text-gray-400 hover:text-gray-600">
+                                                <i data-lucide="x" class="w-5 h-5"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm text-gray-600">Saldo disponible:</span>
-                                    <span class="text-sm font-medium text-green-600">$30,000</span>
+
+                                <!-- Estado de Cuenta -->
+                                <div id="estadoCuenta" class="hidden">
+                                    <div class="p-4 bg-gray-50 rounded-lg space-y-3">
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm text-gray-600">Límite de crédito:</span>
+                                            <span class="text-sm font-medium" id="limiteCredito">$0</span>
+                                        </div>
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm text-gray-600">Deuda actual:</span>
+                                            <span class="text-sm font-medium text-amber-600" id="deudaActual">$0</span>
+                                        </div>
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm text-gray-600">Disponible:</span>
+                                            <span class="text-sm font-medium text-green-600" id="disponible">$0</span>
+                                        </div>
+                                        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                            <div id="barraDeuda" class="h-full bg-primary" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Nueva Compra -->
+                                    <div class="mt-4 p-4 bg-primary/5 rounded-lg space-y-3 border border-primary/10">
+                                        <h5 class="font-medium text-gray-900">Nueva compra</h5>
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm text-gray-600">Monto a agregar:</span>
+                                            <span class="text-sm font-medium text-primary" id="montoNuevaCompra">$0</span>
+                                        </div>
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm text-gray-600">Deuda resultante:</span>
+                                            <span class="text-sm font-medium" id="deudaResultante">$0</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
-                                    <div class="h-full bg-primary" style="width: 40%"></div>
+
+                                <!-- Mensaje de Error -->
+                                <div id="errorCuentaCorriente" class="hidden">
+                                    <div class="p-4 bg-red-50 rounded-lg text-red-600 text-sm">
+                                        <i data-lucide="alert-circle" class="w-5 h-5 inline-block mr-2"></i>
+                                        <span id="mensajeError">Error message here</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -284,7 +356,7 @@
                         <i data-lucide="check-circle" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
                         Finalizar Venta
                     </button>
-                    <button class="btn-secondary w-full h-12 flex items-center justify-center gap-2">
+                    <button onclick="cancelarVenta()" class="btn-secondary w-full h-12 flex items-center justify-center gap-2">
                         <i data-lucide="x-circle" class="w-5 h-5"></i>
                         Cancelar
                     </button>
@@ -292,7 +364,7 @@
             </div>
         </div>
     </div>
-
+    <script src="../js/funciones.js"></script>
     <script src="../js/ventas.js"></script>
 </body>
 </html> 

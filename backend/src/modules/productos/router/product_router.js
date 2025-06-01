@@ -1,10 +1,10 @@
 import express from 'express';
-import db from '../../conection.js';
+import db from '../../../conection.js';
 import { CreateProductHandler, DeleteProductHandler, GetAllProductHandler, GetByIdProductHandler, PutProductHandler } from '../handler/product_handler.js';
 
-export const productsHandler = express.Router();
+export const productsRouter = express.Router();
 
-productsHandler.get('/',async(req,res)=>{
+productsRouter.get('/',async(req,res)=>{
     try {
          const response = await GetAllProductHandler()
          res.status(200).json(response)
@@ -12,7 +12,7 @@ productsHandler.get('/',async(req,res)=>{
         return res.status(500).json({error:error.message});
     }
 });
-productsHandler.get('/:id',async(req,res)=>{
+productsRouter.get('/:id',async(req,res)=>{
     const {id} = req.params;
     try {
        const response = await GetByIdProductHandler(id)
@@ -22,7 +22,7 @@ productsHandler.get('/:id',async(req,res)=>{
     }
 });
 
-productsHandler.post('/',async(req,res)=>{
+productsRouter.post('/',async(req,res)=>{
     try {
         const response = await CreateProductHandler(req.body)
         res.status(201).json(response)
@@ -31,7 +31,7 @@ productsHandler.post('/',async(req,res)=>{
     }
 });
 
-productsHandler.put('/:id',async (req,res)=>{
+productsRouter.put('/:id',async (req,res)=>{
     const {id}= req.params;
     try {
         const response =  await PutProductHandler(id,req.body)
@@ -41,7 +41,7 @@ productsHandler.put('/:id',async (req,res)=>{
     }
 });
 
-productsHandler.delete('/:id',async(req,res)=>{
+productsRouter.delete('/:id',async(req,res)=>{
     const {id} = req.params;
     try {
        const response = await DeleteProductHandler(id)

@@ -1,5 +1,5 @@
 import express from 'express';
-import db from '../../conection.js';
+import db from '../../../conection.js';
 import { GetAllOrdersHandler, CreateVentaHandler } from '../handler/Handler_ventas.js';
 
 

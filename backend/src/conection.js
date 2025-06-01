@@ -1,7 +1,7 @@
 import dotenv from'dotenv';
 import{ Sequelize } from  'sequelize';
-import ventasModel from './ventas/modelo/modelo.js'
-import { modeloProducto, DetailModel } from './productos/modelo/modelo.js';
+import ventasModel from './modules/ventas/modelo/modelo.js'
+import { modeloProducto, DetailModel } from './modules/productos/modelo/modelo.js';
 dotenv.config();
 const {
   DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DB_URL

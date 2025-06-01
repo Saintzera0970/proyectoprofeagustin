@@ -25,7 +25,7 @@ ventas.hasMany(detalles,{
 });
 detalles.belongsTo(ventas,{
   foreignKey:'ventaId',
-  tergetKey:'id'
+  targetKey:'id'
 });
 productos.hasMany(detalles,{
   foreignKey:'productoId',

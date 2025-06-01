@@ -24,16 +24,20 @@ export const modeloProducto = (sequelize)=>{
          type:DataTypes.STRING,
          allowNull:false   
         },
-        wholPrice:{
-            type:DataTypes.STRING,    
+         description:{
+            type:DataTypes.STRING,
+            
         },
+        // wholPrice:{
+        //     type:DataTypes.STRING,    
+        // },
         stock:{
             type:DataTypes.INTEGER,
             defaultValue:1,
         },
-        codeBar:{
-            type:DataTypes.STRING, 
-        }
+        // codeBar:{
+        //     type:DataTypes.STRING, 
+        // }
     },{
         sequelize: sequelize,
         modelName: 'productos', 

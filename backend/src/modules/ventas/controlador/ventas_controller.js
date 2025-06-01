@@ -10,51 +10,56 @@ export async function GetAllOrders() {
 }
 
 export async function CreateOrder(order){
-    const totalAmount = 0
+    let totalAmount = 0
     try {
-       // return await ventas.create(order)
-        const productList = await productos.findAll({ where: { id: productId.map((e) => e.id) } });
+        const productList = await productos.findAll({ where: { id: order.productId.map((e) => e.id) } });
         for (const element of order.productId) {
             const product = productList.find((product) => product.id === element.id);
             if (product) {
-                //const wholePrice = product.wholPrice ? product.wholPrice : product.price;
-                //const precio = wholSale ? wholePrice : product.price;
-                totalAmount += element.quantity * element.precio;
+                totalAmount += element.quantity * product.price;
             }
         }
-        const ventaCreada = await ventas.create(order);
+        console.log("totalamount:" +totalAmount);
+        
+        const ventaCreada = await ventas.create({clientName: order.clientName,               payMethod:order.payMethod, 
+            delivery: order.delivery,
+            description:order.description , totalAmount:totalAmount
+        });
+
 
         for (const element of order.productId) {
             const product = productList.find((product) => product.id === element.id);
             if (product) {
-                const precio = wholSale ? product.wholPrice ?? product.price : product.price;
-
                 if (product.stock >= element.quantity) {
+                    console.log(product.id);
+                    
                     await detalles.create({
-                        orderId: response.id,
-                        productId: product.id,
+                        ventaId: ventaCreada.id,
+                        productoId: product.id,
                         quantity: element.quantity,
-                        unitPrice: precio,
-                        totalPrice: element.quantity * precio
+                        unitPrice: product.price,
+                        totalPrice: element.quantity * product.price
                     });
 
-                    await products.update(
+                    await productos.update(
                         { stock: product.stock - element.quantity },
                         { where: { id: product.id } }
                     );
                 } else {
-                    return res.status(400).json({ error: `Not enough stock for product ID: ${product.id}` });
+                    throw new Error('Error, stock bajo');
+
                 }
             }
         }
 
-        const fullResponse = await orders.findOne({
-            where: { id: response.id },
+        const fullResponse = await ventas.findOne({
+            where: { id: ventaCreada.id },
             include: [{
-                model: itemorder,
-                include: [products]
+                model: detalles,
+                include: [{model:productos}]
             }]
         });
+        return fullResponse
     } catch (error) {
         throw error
     }

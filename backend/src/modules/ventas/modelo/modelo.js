@@ -20,18 +20,17 @@ export default (sequelize)=>{
             defaultValue:false,
             allowNull:false
         },
-        wholSale:{
-            type:DataTypes.BOOLEAN,
-            defaultValue:false,
-            allowNull:false
-        },
+        // wholSale:{
+        //     type:DataTypes.BOOLEAN,
+        //     defaultValue:false,
+        //     allowNull:false
+        // },
         totalAmount:{
             type:DataTypes.INTEGER,
             allowNull:false,
         },
         description:{
             type:DataTypes.STRING,
-            
         },
     },{
         sequelize: sequelize,

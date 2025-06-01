@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +8,239 @@
     <link href="../dist/output.css" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        /* Estilos base */
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+        }
+
+        /* Modo claro (default) */
+        .light {
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        /* Modo oscuro */
+        .dark {
+            --tw-bg-opacity: 1;
+            background-color: var(--bg-main);
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+        }
+
+        /* Textos en modo oscuro */
+        .dark h1,
+        .dark h2,
+        .dark h3,
+        .dark p,
+        .dark label,
+        .dark span,
+        .dark input,
+        .dark textarea,
+        .dark select,
+        .dark .text-gray-500,
+        .dark .text-gray-600,
+        .dark .text-gray-700,
+        .dark .text-gray-800,
+        .dark .text-gray-900 {
+            color: #ffffff !important;
+        }
+
+        /* Textos específicos */
+        .dark .subtotal,
+        .dark .total,
+        .dark #datetime,
+        .dark .ticket-number,
+        .dark .search-label,
+        .dark .product-name,
+        .dark .product-code,
+        .dark .product-price,
+        .dark .product-quantity,
+        .dark .product-subtotal {
+            color: #ffffff !important;
+        }
+
+        /* Campos de entrada */
+        .dark input,
+        .dark textarea,
+        .dark select {
+            background-color: var(--input-bg) !important;
+            border: 1px solid var(--border-color) !important;
+            color: #ffffff !important;
+        }
+
+        .dark input::placeholder,
+        .dark textarea::placeholder {
+            color: var(--input-placeholder) !important;
+        }
+
+        /* Tabla de productos */
+        .dark table {
+            border-color: var(--border-color) !important;
+        }
+
+        .dark table th {
+            color: #ffffff !important;
+            background-color: var(--bg-card) !important;
+            border-bottom: 1px solid var(--border-color) !important;
+        }
+
+        .dark table td {
+            color: #ffffff !important;
+            border-color: var(--border-color) !important;
+        }
+
+        /* Método de pago */
+        .dark .payment-method-title,
+        .dark .payment-option {
+            color: #ffffff !important;
+        }
+
+        /* Botones */
+        .dark .btn-primary {
+            background-color: var(--link-color);
+            color: #ffffff !important;
+        }
+
+        .dark .btn-secondary {
+            background-color: var(--input-bg);
+            color: #ffffff !important;
+            border: 1px solid var(--border-color);
+        }
+
+        .dark .btn-secondary:hover {
+            background-color: var(--button-hover);
+        }
+
+        /* Checkbox personalizado */
+        .dark .custom-checkbox {
+            border-color: var(--border-color) !important;
+            background-color: var(--input-bg) !important;
+        }
+
+        .dark .custom-checkbox:checked {
+            background-color: var(--link-color) !important;
+            border-color: var(--link-color) !important;
+        }
+
+        /* Descripción de la venta */
+        .dark .sale-description {
+            color: #ffffff !important;
+            background-color: var(--input-bg) !important;
+            border: 1px solid var(--border-color) !important;
+        }
+
+        /* Totales */
+        .dark .subtotal-label,
+        .dark .total-label {
+            color: #ffffff !important;
+        }
+
+        .dark .subtotal-amount,
+        .dark .total-amount {
+            color: #ffffff !important;
+            font-weight: bold;
+        }
+
+        /* Búsqueda de productos y clientes */
+        .dark .search-input {
+            background-color: var(--input-bg) !important;
+            border: 1px solid var(--border-color) !important;
+            color: #ffffff !important;
+        }
+
+        .dark .search-icon {
+            color: #ffffff !important;
+        }
+
+        /* Mensajes y estados */
+        .dark .error-message {
+            color: var(--error-text) !important;
+        }
+
+        .dark .success-message {
+            color: var(--success-text) !important;
+        }
+
+        /* Animaciones y transiciones */
+        .theme-transition {
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Efectos hover */
+        .dark .hover\:bg-gray-50:hover {
+            background-color: var(--hover-bg) !important;
+        }
+
+        .dark .hover\:text-gray-700:hover {
+            color: #ffffff !important;
+        }
+
+        /* Scrollbar personalizada */
+        .dark ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .dark ::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-tertiary);
+        }
+
+        /* Aplicar variables */
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .card {
+            background-color: var(--bg-card) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        .input-field {
+            background-color: var(--bg-main) !important;
+            border-color: var(--border-color) !important;
+            color: var(--text-primary) !important;
+        }
+
+        table thead {
+            background-color: var(--bg-main) !important;
+            color: var(--text-secondary) !important;
+        }
+
+        table tbody {
+            background-color: var(--bg-card) !important;
+            color: var(--text-primary) !important;
+        }
+
+        table tr {
+            border-color: var(--border-color) !important;
+        }
+
+        .dark .btn-secondary {
+            @apply border-gray-600 text-gray-300 hover:bg-gray-700;
+        }
+
+        .dark .bg-white {
+            background-color: var(--bg-card) !important;
+        }
+
         .card {
             @apply bg-white rounded-xl shadow-sm p-6 transition-all duration-300;
         }
@@ -56,7 +289,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+<body class="min-h-screen theme-transition">
     <!-- Header -->
     <header class="bg-gradient-to-r from-primary to-primary-dark p-4 text-white shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto">
@@ -85,6 +318,15 @@
                     <button onclick="window.location.href='altas.html'" class="flex items-center gap-2 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
                         <i data-lucide="user-plus" class="w-[18px] h-[18px]"></i>
                         <span class="hidden md:inline">ALTAS</span>
+                    </button>
+                    <!-- Botón de tema -->
+                    <button 
+                        onclick="toggleTheme()"
+                        class="theme-icon flex items-center justify-center w-10 h-10 rounded-full hover:bg-white/10 transition-all"
+                        title="Cambiar tema"
+                    >
+                        <i data-lucide="sun" class="w-5 h-5 sun-icon"></i>
+                        <i data-lucide="moon" class="w-5 h-5 moon-icon hidden"></i>
                     </button>
                 </nav>
             </div>
@@ -409,6 +651,7 @@
     </div>
 
     <script src="../js/funciones.js"></script>
+    <script src="../js/theme.js"></script>
     <script src="../js/ventas.js"></script>
 </body>
 </html> 

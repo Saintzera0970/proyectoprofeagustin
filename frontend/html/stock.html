@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +8,104 @@
     <link href="../dist/output.css" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        /* Estilos base */
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+        }
+
+        /* Modo claro (default) */
+        .light {
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        /* Modo oscuro */
+        .dark {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --tw-bg-opacity: 1;
+            background-color: var(--bg-main);
+        }
+
+        /* Aplicar variables */
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .card {
+            background-color: var(--bg-card) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        .input-field {
+            background-color: var(--input-bg) !important;
+            color: var(--input-text) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        .input-field::placeholder {
+            color: var(--input-placeholder) !important;
+        }
+
+        table thead {
+            background-color: var(--hover-bg) !important;
+        }
+
+        table thead th {
+            color: var(--text-secondary) !important;
+            font-weight: 600;
+        }
+
+        table tbody {
+            background-color: var(--bg-card) !important;
+        }
+
+        table tbody td {
+            color: var(--text-primary) !important;
+        }
+
+        table tr {
+            border-color: var(--border-color) !important;
+        }
+
+        .dark .btn-secondary {
+            @apply border-gray-600 text-gray-300 hover:bg-gray-700;
+        }
+
+        .dark .bg-white {
+            background-color: var(--bg-card) !important;
+        }
+
+        .dark .text-gray-500 {
+            color: var(--text-tertiary) !important;
+        }
+
+        .dark .text-gray-600 {
+            color: var(--text-secondary) !important;
+        }
+
+        .dark .text-gray-700 {
+            color: var(--text-primary) !important;
+        }
+
+        .dark .text-gray-800 {
+            color: var(--header-text) !important;
+        }
+
+        /* Animación para el cambio de tema */
+        .theme-transition {
+            transition: all 0.3s ease-in-out;
+        }
+
         #productsTableBody tr {
             transition: all 0.3s ease-in-out;
         }
@@ -41,9 +139,223 @@
         .fade-out {
             animation: fadeOutLeft 0.3s ease-in-out forwards;
         }
+
+        /* Estilos para estados de stock */
+        .stock-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .stock-badge.high {
+            background-color: var(--success-text);
+            color: var(--bg-card);
+        }
+
+        .stock-badge.medium {
+            background-color: var(--warning-text);
+            color: var(--bg-card);
+        }
+
+        .stock-badge.low {
+            background-color: var(--error-text);
+            color: var(--bg-card);
+        }
+
+        /* Mejorar visibilidad de los botones de acción */
+        .action-button {
+            color: var(--muted-text);
+            transition: color 0.2s ease;
+        }
+
+        .action-button:hover {
+            color: var(--link-color);
+        }
+
+        /* Estilos para la paginación */
+        .pagination-button {
+            background-color: var(--bg-card);
+            color: var(--text-secondary);
+            border-color: var(--border-color);
+        }
+
+        .pagination-button:hover:not(:disabled) {
+            background-color: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .pagination-button.active {
+            background-color: var(--link-color);
+            color: var(--bg-card);
+            border-color: var(--link-color);
+        }
+
+        /* Mejorar visibilidad del formulario de nuevo producto */
+        .form-label {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .form-hint {
+            color: var(--text-tertiary);
+            font-size: 0.875rem;
+        }
+
+        /* Actualizar los estilos para el modo oscuro */
+        .dark {
+            /* Ajustes generales */
+            --tw-bg-opacity: 1;
+            background-color: var(--bg-main);
+        }
+
+        /* Tabla */
+        .dark table {
+            border-color: var(--border-color) !important;
+        }
+
+        .dark table thead {
+            background-color: var(--bg-card) !important;
+        }
+
+        .dark table thead th {
+            color: var(--text-secondary) !important;
+            border-bottom-color: var(--border-color) !important;
+        }
+
+        .dark table tbody tr {
+            border-color: var(--divider-color) !important;
+        }
+
+        .dark table tbody tr:hover {
+            background-color: var(--hover-bg) !important;
+        }
+
+        .dark table td {
+            color: var(--text-primary) !important;
+        }
+
+        /* Campos de búsqueda y formularios */
+        .dark .input-field {
+            background-color: var(--input-bg) !important;
+            border-color: var(--border-color) !important;
+            color: var(--input-text) !important;
+        }
+
+        .dark .input-field:focus {
+            border-color: var(--link-color) !important;
+            box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+        }
+
+        .dark .input-field::placeholder {
+            color: var(--input-placeholder) !important;
+        }
+
+        /* Textos */
+        .dark .text-gray-500 { color: var(--text-tertiary) !important; }
+        .dark .text-gray-600 { color: var(--text-secondary) !important; }
+        .dark .text-gray-700 { color: var(--text-primary) !important; }
+        .dark .text-gray-800 { color: var(--header-text) !important; }
+
+        /* Badges de estado */
+        .dark .stock-badge {
+            border: 1px solid transparent;
+        }
+
+        .dark .stock-badge.high {
+            background-color: rgba(74, 222, 128, 0.2);
+            color: var(--success-text);
+            border-color: var(--success-text);
+        }
+
+        .dark .stock-badge.medium {
+            background-color: rgba(251, 191, 36, 0.2);
+            color: var(--warning-text);
+            border-color: var(--warning-text);
+        }
+
+        .dark .stock-badge.low {
+            background-color: rgba(248, 113, 113, 0.2);
+            color: var(--error-text);
+            border-color: var(--error-text);
+        }
+
+        /* Botones de acción */
+        .dark .action-button {
+            color: var(--text-secondary);
+        }
+
+        .dark .action-button:hover {
+            color: var(--link-color);
+        }
+
+        /* Paginación */
+        .dark .pagination-button {
+            background-color: var(--bg-card);
+            color: var(--text-secondary);
+            border-color: var(--border-color);
+        }
+
+        .dark .pagination-button:hover:not(:disabled) {
+            background-color: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .dark .pagination-button.active {
+            background-color: var(--link-color);
+            color: var(--bg-card);
+            border-color: var(--link-color);
+        }
+
+        .dark .pagination-button:disabled {
+            color: var(--text-tertiary);
+            cursor: not-allowed;
+        }
+
+        /* Formulario de nuevo producto */
+        .dark #newProductForm {
+            background-color: var(--bg-card);
+            border-color: var(--border-color);
+        }
+
+        .dark .form-label {
+            color: var(--text-secondary);
+        }
+
+        .dark .form-hint {
+            color: var(--text-tertiary);
+        }
+
+        /* Scrollbar personalizada */
+        .dark ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .dark ::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-tertiary);
+        }
+
+        /* Efectos hover */
+        .dark .hover\:bg-gray-50:hover {
+            background-color: var(--hover-bg) !important;
+        }
+
+        .dark .hover\:text-gray-700:hover {
+            color: var(--text-primary) !important;
+        }
     </style>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+<body class="min-h-screen theme-transition">
     <!-- Header -->
     <header class="bg-gradient-to-r from-primary to-primary-dark p-4 text-white shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto">
@@ -52,7 +364,7 @@
                     <span id="datetime" class="text-sm bg-white/10 px-3 py-1 rounded-full hidden md:inline-block">
                     </span>
                 </div>
-                <nav class="flex flex-wrap justify-center gap-3 md:gap-4">
+                <nav class="flex flex-wrap justify-center gap-2 md:gap-6 items-center">
                     <button onclick="window.location.href='home.html'" class="flex items-center gap-2 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
                         <i data-lucide="home" class="w-[18px] h-[18px]"></i>
                         <span class="hidden md:inline">INICIO</span>
@@ -68,6 +380,15 @@
                     <button onclick="window.location.href='altas.html'" class="flex items-center gap-2 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
                         <i data-lucide="user-plus" class="w-[18px] h-[18px]"></i>
                         <span class="hidden md:inline">ALTAS</span>
+                    </button>
+                    <!-- Botón de tema -->
+                    <button 
+                        onclick="toggleTheme()"
+                        class="theme-icon flex items-center justify-center w-10 h-10 rounded-full hover:bg-white/10 transition-all"
+                        title="Cambiar tema"
+                    >
+                        <i data-lucide="sun" class="w-5 h-5 sun-icon"></i>
+                        <i data-lucide="moon" class="w-5 h-5 moon-icon hidden"></i>
                     </button>
                 </nav>
             </div>
@@ -227,7 +548,7 @@
             </div>
         </div>
     </div>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="../js/theme.js"></script>
     <script src="../js/funciones.js"></script>
     <script src="../js/stock.js"></script>
 </body>

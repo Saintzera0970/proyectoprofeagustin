@@ -1,4 +1,4 @@
-import { Cliente } from '../../../conection.js'; // Asegurate de que esta ruta sea la correcta
+import  {Cliente}  from '../../../conection.js'; // Asegurate de que esta ruta sea la correcta
 
 export const updateCliente = async (id, nombre, email, telefono) => {
   try {

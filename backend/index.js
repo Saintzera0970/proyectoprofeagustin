@@ -1,8 +1,7 @@
 import express from 'express';
-import conn from "./src/conection.js"
 import { router } from './src/router.js';
-import { UploadOrders } from './src/utils.js/uploadVentas.js';
-import { UploadProducts } from './src/utils.js/upload_productos.js';
+import { UploadOrders } from './src/utils/uploadVentas.js';
+import { UploadProducts } from './src/utils/upload_productos.js';
 import { conn } from './src/conection.js';
 const server = express();
 
@@ -17,7 +16,7 @@ server.use(express.json())
 server.use(express.urlencoded({ extended: true }));
 
 server.use('/',router)
-conn.conn.sync({force:true}).then(()=>{
+conn.sync({force:true}).then(()=>{
     server.listen(1000, () => {
       UploadOrders()
       UploadProducts()

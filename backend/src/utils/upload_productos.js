@@ -1,7 +1,6 @@
-import db from  "../conection.js";
+import {productos} from  "../conection.js";
 import { api} from "./productosEjemplo.js";
 
-const {productos} = db;
 
 export async function UploadProducts() {
     const response = api.map(async(element)=>{

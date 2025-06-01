@@ -1,5 +1,4 @@
-import db from '../../conection.js'
-const {productos} = db
+import {productos} from '../../../conection.js'
 
 export async function CreateProductController(productoInfo) {
     try {

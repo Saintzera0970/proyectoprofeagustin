@@ -1,4 +1,4 @@
-import { CreateProductController, DeleteProductController, GetAllProductsController, GetProductByIdController, PutProductController } from '../../controler/product_controller.js';
+import { CreateProductController, DeleteProductController, GetAllProductsController, GetProductByIdController, PutProductController } from '../controler/product_controller.js';
 
 export async function GetAllProductHandler() {
     try {

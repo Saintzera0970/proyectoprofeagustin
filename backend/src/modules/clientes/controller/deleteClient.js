@@ -1,4 +1,4 @@
-import { Cliente } from '../../conection.js'; // Asegurate de que la ruta sea correcta
+import { Cliente } from '../../../conection.js'; // Asegurate de que la ruta sea correcta
 
 export const deleteCliente = async (id) => {
   try {

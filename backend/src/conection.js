@@ -15,6 +15,7 @@ const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
 
 ventasModel(sequelize)
 modeloProducto(sequelize)
+DetailModel(sequelize)
 
 export const { Empleado, Cliente, productos , ventas, detalles } = sequelize.models;
 

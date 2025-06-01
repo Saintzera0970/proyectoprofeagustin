@@ -1,6 +1,6 @@
-import db from '../../../conection.js'
+import {ventas, productos, detalles} from '../../../conection.js'
 
-const {ventas,productos,detalles} = db;
+
 export async function GetAllOrders() {
     try {
         return await ventas.findAll()

@@ -1,5 +1,4 @@
 import express from 'express';
-import db from '../../../conection.js';
 import { CreateProductHandler, DeleteProductHandler, GetAllProductHandler, GetByIdProductHandler, PutProductHandler } from '../handler/product_handler.js';
 
 export const productsRouter = express.Router();

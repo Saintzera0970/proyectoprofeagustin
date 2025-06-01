@@ -1,6 +1,6 @@
-import db from "../conection.js";
+import {ventas} from "../conection.js";
 import { ordersArray} from './ventasEjemplo.js'
-const {ventas} = db;
+
 export async function UploadOrders() {
     const response = ordersArray.map(async(element)=>{
         return await ventas.create({

@@ -1,4 +1,4 @@
-import  {Cliente}  from '../../conection.js';
+import  {Cliente}  from '../../../conection.js';
 
 export const newCliente = async (nombre, email, telefono) => {
   try {

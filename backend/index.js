@@ -1,7 +1,17 @@
 import express from 'express';
+import { conn } from './src/conection.js';
+import  {ruta}  from './src/clientes/rutas/indexRoutes.js';
 
-const server = express()
+const server = express();
 
- server.listen(1000, () => {
-      console.log('Server run in url : http://localhost:4321/');
-    });
+server.use(express.json());
+server.use('/', ruta); // 👈 Usar las rutas
+
+
+conn.sync({ force: false }).then(() => {
+  server.listen(3001, () => {
+    console.log('estoy listo :P');
+  });
+}).catch(err => {
+  console.error('Error en conexión con DB:', err);
+});

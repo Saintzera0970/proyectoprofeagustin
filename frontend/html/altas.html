@@ -25,8 +25,28 @@
 
         /* Modo oscuro */
         .dark {
-            /* Ajustes generales */
-            --tw-bg-opacity: 1;
+            /* Variables de color mejoradas */
+            --bg-main: #1a1a2e;
+            --bg-card: #1f1f3d;
+            --text-primary: #ffffff;
+            --text-secondary: #a0aec0;
+            --text-tertiary: #718096;
+            --border-color: #2d2d4d;
+            --hover-bg: #2a2a4a;
+            --input-bg: #2d2d4d;
+            --input-text: #ffffff;
+            --input-placeholder: #718096;
+            --input-focus-border: #3b82f6;
+            --input-focus-shadow: rgba(59, 130, 246, 0.2);
+            --link-color: #3b82f6;
+            --button-hover: #374151;
+            --success-text: #4ade80;
+            --warning-text: #fbbf24;
+            --error-text: #ef4444;
+            --header-text: #ffffff;
+            --icon-color: #a0aec0;
+            --tab-active-bg: rgba(59, 130, 246, 0.1);
+            --muted-text: #64748b;
             background-color: var(--bg-main);
         }
 
@@ -339,6 +359,271 @@
         .dark select.input-field {
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
         }
+
+        /* Formulario en modo oscuro */
+        .dark .form-container {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+        }
+
+        /* Campos de entrada en modo oscuro */
+        .dark .input-field {
+            background-color: var(--input-bg) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--input-text) !important;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .dark .input-field:focus {
+            border-color: var(--input-focus-border) !important;
+            box-shadow: 0 0 0 2px var(--input-focus-shadow);
+            outline: none;
+        }
+
+        .dark .input-field::placeholder {
+            color: var(--input-placeholder) !important;
+        }
+
+        /* Etiquetas de campo en modo oscuro */
+        .dark .input-label {
+            color: var(--text-secondary) !important;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        /* Campo requerido en modo oscuro */
+        .dark .required-field::after {
+            content: ' *';
+            color: var(--error-text) !important;
+        }
+
+        /* Botones en modo oscuro */
+        .dark .btn-primary {
+            background-color: var(--link-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .dark .btn-primary:hover {
+            background-color: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .dark .btn-secondary {
+            background-color: var(--input-bg);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .dark .btn-secondary:hover {
+            background-color: var(--button-hover);
+            color: var(--text-primary);
+            border-color: var(--text-secondary);
+        }
+
+        /* Selector de categoría en modo oscuro */
+        .dark select.input-field {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23718096'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.25rem;
+            padding-right: 2.5rem;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        /* Mensajes de estado en modo oscuro */
+        .dark .error-message {
+            color: var(--error-text) !important;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        .dark .success-message {
+            color: var(--success-text) !important;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Área de descripción en modo oscuro */
+        .dark textarea.input-field {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        /* Efectos hover mejorados */
+        .dark .input-field:hover:not(:focus) {
+            border-color: var(--text-tertiary) !important;
+        }
+
+        .dark .btn-primary:active,
+        .dark .btn-secondary:active {
+            transform: translateY(1px);
+        }
+
+        /* Sombras y efectos visuales */
+        .dark .form-container {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2),
+                        0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Iconos en modo oscuro */
+        .dark .icon-container {
+            background-color: var(--hover-bg);
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dark .icon-container i {
+            color: var(--text-secondary);
+        }
+
+        /* Tabs Container */
+        .dark .tabs-container {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 0.75rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Tabs Navigation */
+        .dark .tabs-nav {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background-color: var(--bg-main);
+            border-radius: 0.5rem;
+        }
+
+        /* Tab Buttons */
+        .dark .tab-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dark .tab-button:hover {
+            background-color: var(--hover-bg);
+            color: var(--text-primary);
+            border-color: var(--border-color);
+            transform: translateY(-1px);
+        }
+
+        .dark .tab-button.active {
+            background-color: var(--link-color);
+            color: white !important;
+            border-color: transparent;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+
+        .dark .tab-button.active:hover {
+            background-color: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        /* Tab Button Icons */
+        .dark .tab-button i {
+            width: 1.25rem;
+            height: 1.25rem;
+            transition: all 0.2s ease;
+        }
+
+        .dark .tab-button:hover i {
+            transform: scale(1.1);
+        }
+
+        .dark .tab-button.active i {
+            color: white;
+        }
+
+        /* Tab Content Animation */
+        @keyframes tabFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tab-content {
+            animation: tabFadeIn 0.3s ease-out forwards;
+        }
+
+        /* Tab Button Ripple Effect */
+        .dark .tab-button::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 10%, transparent 10.01%);
+            background-repeat: no-repeat;
+            background-position: 50%;
+            transform: scale(10, 10);
+            opacity: 0;
+            transition: transform 0.3s, opacity 0.5s;
+        }
+
+        .dark .tab-button:active::after {
+            transform: scale(0, 0);
+            opacity: 0.3;
+            transition: 0s;
+        }
+
+        /* Responsive Tabs */
+        @media (max-width: 640px) {
+            .dark .tabs-nav {
+                flex-wrap: wrap;
+            }
+            
+            .dark .tab-button {
+                flex: 1 1 calc(50% - 0.5rem);
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen theme-transition">
@@ -390,15 +675,15 @@
         </div>
 
         <!-- Tabs -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-            <nav class="flex space-x-2 px-2" aria-label="Tabs">
+        <div class="tabs-container">
+            <nav class="tabs-nav" aria-label="Tabs">
                 <button 
                     onclick="showTab('productos')"
                     class="tab-button active" 
                     data-tab="productos"
                 >
                     <i data-lucide="package" class="w-5 h-5"></i>
-                    Productos
+                    <span>Productos</span>
                 </button>
                 <button 
                     onclick="showTab('empleados')"
@@ -406,7 +691,7 @@
                     data-tab="empleados"
                 >
                     <i data-lucide="users" class="w-5 h-5"></i>
-                    Empleados
+                    <span>Empleados</span>
                 </button>
                 <button 
                     onclick="showTab('clientes')"
@@ -414,7 +699,7 @@
                     data-tab="clientes"
                 >
                     <i data-lucide="user" class="w-5 h-5"></i>
-                    Clientes
+                    <span>Clientes</span>
                 </button>
                 <button 
                     onclick="showTab('usuarios')"
@@ -422,7 +707,7 @@
                     data-tab="usuarios"
                 >
                     <i data-lucide="user-cog" class="w-5 h-5"></i>
-                    Usuarios
+                    <span>Usuarios</span>
                 </button>
             </nav>
         </div>
@@ -510,10 +795,10 @@
                             <input type="text" class="input-field" required>
                             <span class="input-hint">Sin puntos ni espacios</span>
                         </div>
-                        <div class="input-group">
+                        <!-- <div class="input-group">
                             <label class="input-label required-field">Email</label>
                             <input type="email" class="input-field" required>
-                        </div>
+                        </div> -->
                         <div class="input-group">
                             <label class="input-label">Teléfono</label>
                             <input type="tel" class="input-field">
@@ -563,10 +848,10 @@
                             <input type="text" class="input-field" required>
                             <span class="input-hint">Sin puntos ni espacios</span>
                         </div>
-                        <div class="input-group">
+                        <!-- <div class="input-group">
                             <label class="input-label">Email</label>
                             <input type="email" class="input-field">
-                        </div>
+                        </div> -->
                         <div class="input-group">
                             <label class="input-label">Teléfono</label>
                             <input type="tel" class="input-field">

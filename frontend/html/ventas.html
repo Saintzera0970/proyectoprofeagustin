@@ -264,10 +264,59 @@
             @apply hover:bg-gray-50 transition-all duration-200;
         }
         .payment-method {
-            @apply flex items-center space-x-3 p-4 rounded-lg border-2 border-transparent hover:border-primary/20 transition-all duration-200 cursor-pointer;
+            @apply flex items-center space-x-3 p-4 rounded-lg border-2 border-transparent transition-all duration-200 cursor-pointer;
+            position: relative;
+        }
+        .payment-method:hover {
+            @apply border-primary/20;
+            background: rgba(59, 130, 246, 0.05);
         }
         .payment-method.selected {
-            @apply border-primary bg-primary/5;
+            @apply border-primary;
+        }
+        .payment-method[onclick*="efectivo"] i {
+            color: #22c55e !important;
+        }
+        .dark .payment-method[onclick*="efectivo"] {
+            background: linear-gradient(45deg, rgba(34, 197, 94, 0.1), transparent);
+        }
+        .dark .payment-method[onclick*="efectivo"].selected {
+            border-color: #22c55e !important;
+            background: linear-gradient(45deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.05));
+        }
+        .dark .payment-method[onclick*="efectivo"]:hover {
+            background: linear-gradient(45deg, rgba(34, 197, 94, 0.15), transparent);
+        }
+        .payment-method[onclick*="transferencia"] i {
+            color: #6366f1 !important;
+        }
+        .dark .payment-method[onclick*="transferencia"] {
+            background: linear-gradient(45deg, rgba(99, 102, 241, 0.1), transparent);
+        }
+        .dark .payment-method[onclick*="transferencia"].selected {
+            border-color: #6366f1 !important;
+            background: linear-gradient(45deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.05));
+        }
+        .dark .payment-method[onclick*="transferencia"]:hover {
+            background: linear-gradient(45deg, rgba(99, 102, 241, 0.15), transparent);
+        }
+        .dark .payment-method span {
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        .dark .payment-method[onclick*="efectivo"] span {
+            color: #4ade80 !important;
+        }
+        .dark .payment-method[onclick*="transferencia"] span {
+            color: #818cf8 !important;
+        }
+        .dark #efectivo_fields {
+            background-color: rgba(34, 197, 94, 0.1) !important;
+            border: 1px solid rgba(34, 197, 94, 0.2) !important;
+        }
+        .dark #transferencia_fields {
+            background-color: rgba(99, 102, 241, 0.1) !important;
+            border: 1px solid rgba(99, 102, 241, 0.2) !important;
         }
         /* Estilo para la barra de scroll */
         .scrollbar-thin::-webkit-scrollbar {
@@ -286,6 +335,21 @@
         
         .scrollbar-thin::-webkit-scrollbar-thumb:hover {
             background: #9ca3af;
+        }
+
+        /* Estilos para los campos de transferencia */
+        .dark #transferencia_fields .bg-gray-50 {
+            background-color: rgba(99, 102, 241, 0.05) !important;
+            border: 1px solid rgba(99, 102, 241, 0.2) !important;
+        }
+
+        .dark #transferencia_fields .text-gray-700,
+        .dark #transferencia_fields .text-gray-600 {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+
+        .dark #transferencia_fields .font-medium {
+            color: #818cf8 !important;
         }
     </style>
 </head>
@@ -499,7 +563,7 @@
                                         <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
                                     </div>
                                 </div>
-                                <div class="p-4 bg-gray-50 rounded-lg space-y-2">
+                                <div class="p-4 rounded-lg space-y-2 bg-opacity-5 bg-indigo-500 border border-indigo-500/20">
                                     <p class="text-sm font-medium text-gray-700">Datos de transferencia:</p>
                                     <div class="flex items-center justify-between">
                                         <p class="text-sm text-gray-600">CBU:</p>

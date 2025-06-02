@@ -25,65 +25,358 @@
 
         /* Modo oscuro */
         .dark {
-            --bg-main: #0f172a;
-            --bg-card: #1e293b;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --border-color: #334155;
-        }
-
-        /* Aplicar variables */
-        body {
+            --tw-bg-opacity: 1;
+            --bg-main: #1a1a2e;
+            --bg-card: #1f1f3d;
+            --text-primary: #ffffff;
+            --text-secondary: #a0aec0;
+            --border-color: #2d2d4d;
+            --hover-bg: #2a2a4a;
+            --success-text: #4ade80;
+            --warning-text: #fbbf24;
+            --error-text: #ef4444;
+            --link-color: #3b82f6;
+            --button-hover: #374151;
+            --input-bg: #2d2d4d;
+            --text-tertiary: #718096;
             background-color: var(--bg-main);
-            color: var(--text-primary);
-            transition: background-color 0.3s, color 0.3s;
         }
 
-        .card {
-            background-color: var(--bg-card) !important;
-            border-color: var(--border-color) !important;
+        /* Textos en modo oscuro - Reglas específicas */
+        .dark .text-gray-400,
+        .dark .text-gray-500,
+        .dark .text-gray-600,
+        .dark .text-gray-700,
+        .dark .text-gray-800,
+        .dark .text-gray-900,
+        .dark .font-medium,
+        .dark .font-semibold,
+        .dark .font-bold,
+        .dark h1,
+        .dark h2,
+        .dark h3,
+        .dark h4,
+        .dark h5,
+        .dark h6,
+        .dark p,
+        .dark span,
+        .dark label {
+            color: #ffffff !important;
         }
 
-        .stat-card {
-            background-color: var(--bg-card) !important;
-            border-color: var(--border-color) !important;
+        /* Textos específicos de las tarjetas */
+        .dark .card h2,
+        .dark .card h3,
+        .dark .card p,
+        .dark .card span {
+            color: #ffffff !important;
         }
 
+        /* Textos de notificaciones */
+        .dark .notification-item h3,
+        .dark .notification-item p {
+            color: #ffffff !important;
+        }
+
+        /* Textos de ventas */
+        .dark .sale-item h3,
+        .dark .sale-item p {
+            color: #ffffff !important;
+        }
+
+        /* Textos de estadísticas */
+        .dark .stat-card p,
+        .dark .stat-card h3 {
+            color: #ffffff !important;
+        }
+
+        /* Textos de usuario */
+        .dark #userName,
+        .dark #userDate,
+        .dark #userTime {
+            color: #ffffff !important;
+        }
+
+        /* Mantener colores específicos para estados */
+        .dark .text-primary { color: var(--link-color) !important; }
+        .dark .text-green-600 { color: var(--success-text) !important; }
+        .dark .text-amber-600 { color: var(--warning-text) !important; }
+        .dark .text-red-600 { color: var(--error-text) !important; }
+
+        /* Textos de tiempo y fechas */
+        .dark .text-xs.text-gray-500 {
+            color: var(--text-tertiary) !important;
+        }
+
+        /* Tarjetas de estadísticas */
         .dark .stat-card {
-            @apply shadow-lg shadow-primary/5;
+            background-color: var(--bg-card) !important;
+            border: 1px solid var(--border-color) !important;
+        }
+
+        .dark .stat-card-success {
+            background-color: rgba(74, 222, 128, 0.1) !important;
+            border: 1px solid var(--success-text) !important;
+        }
+
+        .dark .stat-card-warning {
+            background-color: rgba(251, 191, 36, 0.1) !important;
+            border: 1px solid var(--warning-text) !important;
+        }
+
+        /* Notificaciones */
+        .dark .notification-item {
+            border-color: var(--border-color) !important;
+            background-color: var(--bg-card) !important;
+        }
+
+        .dark .notification-item:hover {
+            background-color: var(--hover-bg) !important;
+        }
+
+        .dark .notification-time {
+            color: var(--text-tertiary) !important;
+        }
+
+        /* Iconos */
+        .dark [data-lucide] {
+            color: var(--icon-color);
+        }
+
+        .dark .icon-success {
+            color: var(--success-text) !important;
+        }
+
+        .dark .icon-warning {
+            color: var(--warning-text) !important;
+        }
+
+        .dark .icon-info {
+            color: var(--link-color) !important;
+        }
+
+        /* Últimas ventas */
+        .dark .sale-item {
+            border-color: var(--border-color) !important;
+        }
+
+        .dark .sale-item:hover {
+            background-color: var(--hover-bg) !important;
+        }
+
+        .dark .sale-amount {
+            color: var(--success-text) !important;
+        }
+
+        .dark .sale-time {
+            color: var(--text-tertiary) !important;
+        }
+
+        /* Botones */
+        .dark .btn-primary {
+            background-color: var(--link-color);
+            color: #ffffff !important;
         }
 
         .dark .btn-secondary {
-            @apply border-gray-600 text-gray-300 hover:bg-gray-700;
+            background-color: var(--input-bg);
+            color: #ffffff !important;
+            border: 1px solid var(--border-color);
         }
 
-        .dark .bg-white {
+        .dark .btn-secondary:hover {
+            background-color: var(--button-hover);
+        }
+
+        /* Tarjetas de información */
+        .dark .info-card {
             background-color: var(--bg-card) !important;
+            border: 1px solid var(--border-color) !important;
         }
 
-        /* Animación para el cambio de tema */
+        .dark .info-card-header {
+            border-bottom: 1px solid var(--border-color) !important;
+        }
+
+        /* Estadísticas específicas */
+        .dark .stat-value {
+            color: #ffffff !important;
+            font-weight: bold;
+        }
+
+        .dark .stat-label {
+            color: var(--text-secondary) !important;
+        }
+
+        .dark .stat-change-positive {
+            color: var(--success-text) !important;
+        }
+
+        .dark .stat-change-negative {
+            color: var(--error-text) !important;
+        }
+
+        /* Animaciones */
         .theme-transition {
             transition: all 0.3s ease-in-out;
         }
 
-        .card {
-            @apply bg-white rounded-xl shadow-sm p-6 transition-all duration-300 hover:shadow-md;
+        /* Scrollbar personalizada */
+        .dark ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
-        .stat-card {
-            @apply transform hover:scale-105 transition-all duration-300;
+
+        .dark ::-webkit-scrollbar-track {
+            background: var(--bg-main);
         }
-        .notification-item {
-            @apply p-4 hover:bg-gray-50 transition-all duration-200 cursor-pointer border-l-4 border-transparent hover:border-primary;
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
         }
-        .sale-item {
-            @apply p-4 hover:bg-gray-50 transition-all duration-200 cursor-pointer rounded-lg hover:shadow-md;
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-tertiary);
         }
-        .animate-fade-in {
-            animation: fadeIn 0.5s ease-in;
+
+        /* Efectos hover */
+        .dark .hover\:bg-gray-50:hover {
+            background-color: var(--hover-bg) !important;
         }
+
+        .dark .hover\:text-gray-700:hover {
+            color: #ffffff !important;
+        }
+
+        /* Administrador section */
+        .dark .admin-info {
+            background-color: var(--bg-card) !important;
+            border: 1px solid var(--border-color) !important;
+            color: #ffffff !important;
+        }
+
+        .dark .admin-name {
+            color: #ffffff !important;
+            font-weight: 600;
+        }
+
+        .dark .admin-role {
+            color: var(--text-secondary) !important;
+        }
+
+        /* Ventas del día card */
+        .dark .sales-card {
+            background-color: rgba(59, 130, 246, 0.1) !important;
+            border: 1px solid var(--link-color) !important;
+        }
+
+        .dark .sales-value {
+            color: #ffffff !important;
+            font-weight: bold;
+        }
+
+        .dark .sales-trend {
+            color: var(--success-text) !important;
+        }
+
+        /* Productos bajos card */
+        .dark .low-stock-card {
+            background-color: rgba(251, 191, 36, 0.1) !important;
+            border: 1px solid var(--warning-text) !important;
+        }
+
+        .dark .low-stock-value {
+            color: #ffffff !important;
+            font-weight: bold;
+        }
+
+        .dark .low-stock-alert {
+            color: var(--warning-text) !important;
+        }
+
+        /* Tarjetas en modo oscuro */
+        .dark .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Tarjetas de estadísticas en modo oscuro */
+        .dark .stat-card {
+            background-color: var(--bg-card) !important;
+            border: 1px solid var(--border-color) !important;
+        }
+
+        .dark .stat-card.bg-gradient-to-br.from-green-50.to-green-100 {
+            background: linear-gradient(to bottom right, rgba(74, 222, 128, 0.1), rgba(74, 222, 128, 0.2)) !important;
+            border-color: rgba(74, 222, 128, 0.3) !important;
+        }
+
+        .dark .stat-card.bg-gradient-to-br.from-amber-50.to-amber-100 {
+            background: linear-gradient(to bottom right, rgba(251, 191, 36, 0.1), rgba(251, 191, 36, 0.2)) !important;
+            border-color: rgba(251, 191, 36, 0.3) !important;
+        }
+
+        /* Elementos de ventas en modo oscuro */
+        .dark .sale-item {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .dark .sale-item:hover {
+            background-color: var(--hover-bg);
+        }
+
+        /* Notificaciones en modo oscuro */
+        .dark .notification-item {
+            background-color: var(--bg-card);
+            border-color: var(--border-color);
+            padding: 1rem;
+        }
+
+        .dark .notification-item:hover {
+            background-color: var(--hover-bg);
+        }
+
+        /* Iconos en modo oscuro */
+        .dark .w-10.h-10.bg-primary\/10 {
+            background-color: rgba(59, 130, 246, 0.2);
+        }
+
+        .dark .w-10.h-10.bg-amber-100 {
+            background-color: rgba(251, 191, 36, 0.2);
+        }
+
+        .dark .w-10.h-10.bg-green-100 {
+            background-color: rgba(74, 222, 128, 0.2);
+        }
+
+        .dark .w-10.h-10.bg-blue-100 {
+            background-color: rgba(59, 130, 246, 0.2);
+        }
+
+        /* Header en modo oscuro */
+        .dark .bg-gradient-to-r.from-primary.to-primary-dark {
+            background: linear-gradient(to right, #2563eb, #1d4ed8);
+        }
+
+        /* Botones en modo oscuro */
+        .dark .hover\:bg-white\/10:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Animaciones en modo oscuro */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
         }
     </style>
 </head>

@@ -353,6 +353,83 @@
         .dark .hover\:text-gray-700:hover {
             color: var(--text-primary) !important;
         }
+
+        /* Estilos específicos para la tabla en modo oscuro */
+        .dark table tbody td {
+            color: #ffffff !important;
+        }
+
+        .dark .product-name {
+            color: #ffffff !important;
+            font-weight: 500;
+        }
+
+        .dark .stock-amount {
+            color: #ffffff !important;
+            font-weight: 500;
+        }
+
+        .dark .stock-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dark .stock-controls button {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 0.375rem;
+            padding: 0.25rem 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .dark .stock-controls button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .stock-value {
+            color: #ffffff !important;
+            font-weight: 500;
+            padding: 0 0.5rem;
+        }
+
+        /* Estado del stock */
+        .dark .stock-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            color: #ffffff;
+        }
+
+        .dark .stock-status.en-stock {
+            background-color: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+        }
+
+        .dark .stock-status.bajo-stock {
+            background-color: rgba(234, 179, 8, 0.2);
+            color: #facc15;
+        }
+
+        .dark .stock-status.sin-stock {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        /* Nombre del producto y cantidad de stock en modo oscuro */
+        .dark #productsTableBody tr td:first-child div:first-child {
+            color: #ffffff !important;
+        }
+
+        .dark #productsTableBody tr td:nth-child(3),
+        .dark #productsTableBody tr td:nth-child(3) span {
+            color: #ffffff !important;
+        }
+
+        .dark #productsTableBody tr td:nth-child(3) button {
+            color: #ffffff !important;
+        }
     </style>
 </head>
 <body class="min-h-screen theme-transition">
@@ -510,6 +587,32 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200" id="productsTableBody">
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="product-name">Mr Clean All-Purpose</div>
+                                <div class="text-sm text-gray-500">Sin descripción</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                Scrubbers
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="stock-value">10</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right">
+                                $3.00
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="stock-badge high">En Stock</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <button class="text-blue-500 hover:text-blue-700 mx-1">
+                                    <i data-lucide="edit" class="w-5 h-5"></i>
+                                </button>
+                                <button class="text-red-500 hover:text-red-700 mx-1">
+                                    <i data-lucide="trash-2" class="w-5 h-5"></i>
+                                </button>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

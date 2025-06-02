@@ -409,7 +409,7 @@ function seleccionarCliente(cliente) {
     const dniElement = document.getElementById('dniClienteSeleccionado');
     
     container.classList.remove('hidden');
-    nombreElement.textContent = cliente.nombre;
+    nombreElement.textContent = `${cliente.nombre} (ID: ${cliente.id})`;
     dniElement.textContent = `DNI: ${cliente.dni}`;
     
     // Limpiar y ocultar el input de búsqueda
@@ -484,11 +484,11 @@ function crearObjetoVenta() {
         payMethod: metodoPago ? metodoPago.value : "efectivo",
         delivery: document.getElementById('ventaDelivery').checked,
         description: document.getElementById('ventaDescripcion').value.trim(),
-        productId: productos.map(producto => ({
+        productId: productos.map(producto => ({  // Cambiamos productos por productId
             id: parseInt(producto.id),
-            quantity: producto.cantidad
+            quantity: parseInt(producto.cantidad)  // Aseguramos que quantity sea un número
         }))
-    };
+};
 
     return venta;
 }
@@ -560,12 +560,20 @@ function obtenerProductosVenta() {
     const productos = [];
     document.querySelectorAll('#productList tr').forEach(tr => {
         const id = tr.getAttribute('data-codigo');
-        const cantidad = parseInt(tr.querySelector('input[type="number"]').value);
-        const precio = parseFloat(tr.querySelector('td:nth-child(3)').textContent.replace('$', ''));
+        const cantidadInput = tr.querySelector('input[type="number"]');
+        
+        if (!id || !cantidadInput || !cantidadInput.value) {
+            throw new Error('Datos de producto inválidos');
+        }
+        
+        const cantidad = parseInt(cantidadInput.value);
+        if (isNaN(cantidad) || cantidad <= 0) {
+            throw new Error('La cantidad debe ser un número mayor a 0');
+        }
+        
         productos.push({ 
-            id: id,
-            cantidad: cantidad,
-            precio: precio
+            id: parseInt(id),
+            cantidad: cantidad
         });
     });
     return productos;

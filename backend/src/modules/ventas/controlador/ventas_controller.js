@@ -12,22 +12,18 @@ export async function GetAllOrders() {
 export async function CreateOrder(order){
     let totalAmount = 0
     try {
-        const productList = await productos.findAll({ where: { id: order.productId.map((e) => e.id) } });
-        for (const element of order.productId) {
-            const product = productList.find((product) => product.id === element.id);
-            if (product) {
-                totalAmount += element.quantity * product.price;
-            }
-        }
-        console.log("totalamount:" +totalAmount);
+        const productId = order.productId.map((e) => parseInt(e.id));
+        const productList = await productos.findAll({
+            where: { id: productId },
+        });
         
         const ventaCreada = await ventas.create({
             payMethod:order.payMethod, 
             delivery: order.delivery,
             description:order.description , 
-            totalAmount:totalAmount,
-            clienteId: order.clienteId, 
-            empleadoId: order.empleadoId
+            totalAmount: 0,
+            clienteId: order.clienteId ? parseInt(order.clienteId) : null, 
+            empleadoId: parseInt(order.empleadoId)
         });
 
 
@@ -35,14 +31,17 @@ export async function CreateOrder(order){
             const product = productList.find((product) => product.id === element.id);
             if (product) {
                 if (product.stock >= element.quantity) {
+                    const unitPrice = parseInt(product.price);
+                    const totalPrice = unitPrice * element.quantity;
+                    totalAmount += totalPrice;
                     console.log(product.id);
                     
                     await detalles.create({
                         ventaId: ventaCreada.id,
                         productoId: product.id,
                         quantity: element.quantity,
-                        unitPrice: product.price,
-                        totalPrice: element.quantity * product.price
+                        unitPrice: unitPrice,
+                        totalPrice: totalPrice
                     });
 
                     await productos.update(

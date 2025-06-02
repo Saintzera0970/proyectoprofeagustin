@@ -3,9 +3,22 @@ import {ventas, productos, detalles,Cliente,Empleado} from '../../../conection.j
 
 export async function GetAllOrders() {
     try {
-        return await ventas.findAll()
+        return await ventas.findAll({
+            include: [
+                {
+                    model: detalles,
+                    include: [{ model: productos }]
+                },
+                {
+                    model: Cliente
+                },
+                {
+                    model: Empleado
+                }
+            ]
+        });
     } catch (error) {
-        throw error
+        throw error;
     }
 }
 

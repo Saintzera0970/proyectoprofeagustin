@@ -3,13 +3,18 @@ import { DataTypes } from 'sequelize';
 export default (sequelize) => {
   return sequelize.define('Empleado', {
     id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       primaryKey: true,
-      defaultValue: DataTypes.UUIDV4,
+      autoIncrement: true,
+      allowNull: false
     },
     nombre: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    pw:{
+      type: DataTypes.STRING,
+      allowNull: false
     },
     telefono: {
       type: DataTypes.STRING,
@@ -28,3 +33,4 @@ export default (sequelize) => {
     timestamps: false,
   });
 }; 
+

@@ -1,4 +1,4 @@
-import {ventas, productos, detalles} from '../../../conection.js'
+import {ventas, productos, detalles,Cliente,Empleado} from '../../../conection.js'
 
 
 export async function GetAllOrders() {
@@ -21,9 +21,14 @@ export async function CreateOrder(order){
         }
         console.log("totalamount:" +totalAmount);
         
-        const ventaCreada = await ventas.create({clientName: order.clientName,               payMethod:order.payMethod, 
+        const ventaCreada = await ventas.create({
+            clientName: order.clientName,
+            payMethod:order.payMethod, 
             delivery: order.delivery,
-            description:order.description , totalAmount:totalAmount
+            description:order.description , 
+            totalAmount:totalAmount,
+            clienteId: order.clienteId, 
+            empleadoId: order.empleadoId
         });
 
 
@@ -47,18 +52,27 @@ export async function CreateOrder(order){
                     );
                 } else {
                     throw new Error('Error, stock bajo');
-
                 }
             }
         }
 
         const fullResponse = await ventas.findOne({
             where: { id: ventaCreada.id },
-            include: [{
+            attributes: { exclude: ['clienteId', 'empleadoId'] },
+            include: [
+                {
                 model: detalles,
-                include: [{model:productos}]
-            }]
-        });
+                include: [{ model: productos }]
+                },
+                {
+                model: Cliente
+                },
+                {
+                model: Empleado
+                }
+            ]
+});
+
         return fullResponse
     } catch (error) {
         throw error

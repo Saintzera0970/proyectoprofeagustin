@@ -1,131 +1,129 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="light">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Gestión</title>
+    <title>Sistema de Gestión - Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="../dist/output.css" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Estilos base */
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+        }
+
+        /* Modo claro (default) */
+        .light {
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        /* Modo oscuro */
+        .dark {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+        }
+
+        /* Aplicar variables */
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .login-card {
+            background-color: var(--bg-card) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        .input-field {
+            background-color: var(--bg-main) !important;
+            border-color: var(--border-color) !important;
+            color: var(--text-primary) !important;
+        }
+
+        .dark .btn-secondary {
+            @apply border-gray-600 text-gray-300 hover:bg-gray-700;
+        }
+
+        /* Animación para el cambio de tema */
+        .theme-transition {
+            transition: all 0.3s ease-in-out;
+        }
+    </style>
   </head>
-  <body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-[1024px] grid md:grid-cols-2 gap-8 items-center">
-        <!-- Sección de Bienvenida -->
-        <div class="text-center md:text-left space-y-6">
-            <div class="space-y-4">
-                <h1 class="text-4xl md:text-6xl font-bold">
-                    <span class="bg-gradient-to-r from-primary to-primary-dark text-transparent bg-clip-text">
-                        SISTEMA DE
-                    </span>
-                    <br/>
-                    <span class="bg-gradient-to-r from-primary-dark to-primary text-transparent bg-clip-text">
-                        GESTIÓN
-                    </span>
-                </h1>
-                <p class="text-gray-600 text-lg md:text-xl">
-                    Administra tu negocio de manera eficiente y segura
-                </p>
-            </div>
-            <div class="hidden md:block space-y-4">
-                <div class="flex items-center gap-3">
-                    <div class="bg-primary/10 p-3 rounded-lg">
-                        <i data-lucide="package" class="w-6 h-6 text-primary"></i>
-                    </div>
-                    <p class="text-gray-600">Control de stock en tiempo real</p>
-                </div>
-                <div class="flex items-center gap-3">
-                    <div class="bg-primary/10 p-3 rounded-lg">
-                        <i data-lucide="shopping-cart" class="w-6 h-6 text-primary"></i>
-                    </div>
-                    <p class="text-gray-600">Gestión de ventas simplificada</p>
-                </div>
-                <div class="flex items-center gap-3">
-                    <div class="bg-primary/10 p-3 rounded-lg">
-                        <i data-lucide="users" class="w-6 h-6 text-primary"></i>
-                    </div>
-                    <p class="text-gray-600">Administración de clientes y empleados</p>
-                </div>
-            </div>
+  <body class="min-h-screen theme-transition flex items-center justify-center p-4">
+    <div class="login-card max-w-md w-full bg-white rounded-xl shadow-lg p-8 space-y-6 relative">
+        <!-- Botón de tema -->
+        <button 
+            onclick="toggleTheme()"
+            class="theme-icon absolute top-4 right-4 flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
+            title="Cambiar tema"
+        >
+            <i data-lucide="sun" class="w-5 h-5 sun-icon text-gray-600 dark:text-gray-300"></i>
+            <i data-lucide="moon" class="w-5 h-5 moon-icon hidden text-gray-600 dark:text-gray-300"></i>
+        </button>
+
+        <div class="text-center">
+            <h1 class="text-2xl font-bold">Bienvenido</h1>
+            <p class="text-gray-500 dark:text-gray-400">Ingresa a tu cuenta</p>
         </div>
 
-        <!-- Formulario de Login -->
-        <div class="card backdrop-blur-sm bg-white/80 shadow-xl">
-            <div class="text-center mb-8">
-                <div class="inline-block p-3 rounded-full bg-primary/10 mb-4">
-                    <i data-lucide="user" class="w-8 h-8 text-primary"></i>
+        <form id="loginForm" class="space-y-4">
+            <div class="space-y-2">
+                <label class="text-sm font-medium">Usuario</label>
+                <div class="relative">
+                    <i data-lucide="user" class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        class="input-field w-full pl-10 pr-4 py-2 rounded-lg border focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                        required
+                    >
                 </div>
-                <h2 class="text-2xl font-bold text-gray-800">Iniciar Sesión</h2>
-                <p class="text-gray-600 mt-2">Ingresa tus credenciales para continuar</p>
             </div>
 
-            <form class="space-y-6" onsubmit="return false">
-                <div class="space-y-2">
-                    <label class="text-sm font-medium text-gray-700 block">
-                        Usuario
-                    </label>
-                    <div class="relative">
-                        <i data-lucide="user" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5"></i>
-                        <input 
-                            type="text"
-                            class="input-field pl-12" 
-                            placeholder="Ingrese su usuario"
-                            id="username"
-                            oninput="validarCredenciales()"
-                        >
-                    </div>
+            <div class="space-y-2">
+                <label class="text-sm font-medium">Contraseña</label>
+                <div class="relative">
+                    <i data-lucide="lock" class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        class="input-field w-full pl-10 pr-10 py-2 rounded-lg border focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                        required
+                    >
+                    <button 
+                        type="button"
+                        onclick="togglePassword(this)"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                        <i data-lucide="eye" class="w-5 h-5"></i>
+                    </button>
                 </div>
-
-                <div class="space-y-2">
-                    <label class="text-sm font-medium text-gray-700 block">
-                        Contraseña
-                    </label>
-                    <div class="relative">
-                        <i data-lucide="lock" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5"></i>
-                        <input
-                            type="password"
-                            class="input-field pl-12"
-                            placeholder="Ingrese su contraseña"
-                            id="password"
-                            oninput="validarCredenciales()"
-                        >
-                        <button 
-                            type="button"
-                            onclick="togglePassword()"
-                            class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                        >
-                            <i data-lucide="eye" class="w-5 h-5" id="passwordToggleIcon"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="flex items-center justify-between text-sm">
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
-                        <span class="text-gray-600">Recordarme</span>
-                    </label>
-                    <a href="#" class="text-primary hover:text-primary-dark">¿Olvidaste tu contraseña?</a>
-                </div>
-
-                <button 
-                    type="button"
-                    id="loginButton"
-                    class="btn-primary w-full h-12 flex items-center justify-center gap-2 text-lg opacity-50 cursor-not-allowed"
-                    disabled
-                >
-                    <i data-lucide="log-in" class="w-5 h-5"></i>
-                    Ingresar
-                </button>
-            </form>
-
-            <div class="mt-6 pt-6 border-t border-gray-200 text-center">
-                <p class="text-sm text-gray-600">
-                    ¿Necesitas ayuda? Contacta a 
-                    <a href="#" class="text-primary hover:text-primary-dark font-medium">Soporte Técnico</a>
-                </p>
             </div>
-        </div>
+
+            <button 
+                type="submit" 
+                class="w-full bg-primary hover:bg-primary-dark text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+            >
+                <i data-lucide="log-in" class="w-5 h-5"></i>
+                Ingresar
+            </button>
+        </form>
+
+        <div id="error-message" class="hidden bg-red-50 text-red-600 p-3 rounded-lg text-sm"></div>
     </div>
 
+    <script src="../js/theme.js"></script>
     <script src="../js/index.js"></script>
   </body>
 </html> 

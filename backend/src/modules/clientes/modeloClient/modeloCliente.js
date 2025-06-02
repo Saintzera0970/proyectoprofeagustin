@@ -3,28 +3,29 @@ import { DataTypes } from 'sequelize';
 export default (sequelize) => {
   return sequelize.define('Cliente', {
     id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       primaryKey: true,
-      defaultValue: DataTypes.UUIDV4,
+      autoIncrement: true,
+      allowNull: false
     },
     nombre: {
       type: DataTypes.STRING,
       allowNull: false,
+      set(value) {
+      this.setDataValue('nombre', value.toLowerCase());
+  }
     },
-    email: {
+    dni: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
-      validate: {
-        isEmail: true,
-      },
+      unique: true
     },
     telefono: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    status: {
-        type: DataTypes.BOOLEAN,
+    tipo: {
+        type: DataTypes.STRING,
     }
   }, {
     tableName: 'clientes',

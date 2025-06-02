@@ -7,9 +7,6 @@ export default (sequelize)=>{
             type:DataTypes.UUID,
             defaultValue: DataTypes.UUIDV1
         },
-        clientName:{
-            type:DataTypes.STRING
-        },
         payMethod:{
             type:DataTypes.STRING,
             defaultValue:'Efectivo',

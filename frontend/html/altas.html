@@ -447,42 +447,36 @@
                     </div>
                     <form class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="input-group">
-                            <label class="input-label required-field">Código</label>
-                            <input type="text" class="input-field" required>
-                            <span class="input-hint">Código único del producto</span>
+                            <label class="input-label required-field">Marca</label>
+                            <input type="text" class="input-field" required placeholder="Marca">
+                            <span class="input-hint">Marca del producto</span>
                         </div>
                         <div class="input-group">
                             <label class="input-label required-field">Nombre del producto</label>
-                            <input type="text" class="input-field" required>
+                            <input type="text" class="input-field" required placeholder="Nombre del producto">
                         </div>
                         <div class="input-group">
                             <label class="input-label required-field">Precio</label>
                             <div class="relative">
                                 <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
-                                <input type="number" class="input-field pl-7" required min="0" step="0.01">
+                                <input type="number" class="input-field pl-7" required min="0" step="0.01" placeholder="0.00">
                             </div>
                         </div>
                         <div class="input-group">
                             <label class="input-label required-field">Stock inicial</label>
-                            <input type="number" class="input-field" required min="0">
+                            <input type="number" class="input-field" required min="0" placeholder="0">
                         </div>
-                        <div class="input-group">
-                            <label class="input-label required-field">Categoría</label>
-                            <select class="input-field" required>
-                                <option value="">Seleccionar categoría</option>
-                                <option value="limpieza">Limpieza</option>
-                                <option value="alimentos">Alimentos</option>
-                                <option value="bebidas">Bebidas</option>
-                                <option value="otros">Otros</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
+                        <!-- <div class="input-group">
+                            <label class="input-label required-field">Categoria</label>
+                            <input type="text" class="input-field" required>
+                        </div> -->
+                        <!-- <div class="input-group">
                             <label class="input-label">Proveedor</label>
                             <input type="text" class="input-field">
-                        </div>
+                        </div> -->
                         <div class="input-group md:col-span-2">
                             <label class="input-label">Descripción</label>
-                            <textarea class="input-field" rows="3"></textarea>
+                            <textarea class="input-field" rows="3" placeholder="Descripción del producto"></textarea>
                         </div>
                         <div class="md:col-span-2 flex justify-end space-x-3">
                             <button type="reset" class="btn-secondary">

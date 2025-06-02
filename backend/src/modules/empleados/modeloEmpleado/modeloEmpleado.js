@@ -11,6 +11,9 @@ export default (sequelize) => {
     nombre: {
       type: DataTypes.STRING,
       allowNull: false,
+      set(value) {
+      this.setDataValue('nombre', value.toLowerCase());
+  }
     },
     pw:{
       type: DataTypes.STRING,

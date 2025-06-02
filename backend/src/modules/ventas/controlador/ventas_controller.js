@@ -22,7 +22,6 @@ export async function CreateOrder(order){
         console.log("totalamount:" +totalAmount);
         
         const ventaCreada = await ventas.create({
-            clientName: order.clientName,
             payMethod:order.payMethod, 
             delivery: order.delivery,
             description:order.description , 

@@ -10,11 +10,11 @@ export const modeloProducto = (sequelize)=>{
         },
         brand:{
             type:DataTypes.STRING,
-            allowNull:false
+            allowNull:false,
         },
         name:{
             type:DataTypes.STRING,
-            allowNull:false
+            allowNull:false,
         },
         category: {
             type: DataTypes.STRING,

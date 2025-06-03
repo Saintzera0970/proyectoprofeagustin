@@ -245,33 +245,176 @@ function toggleNewProduct(isEditing = false) {
     }
 }
 
+// Función para ajustar el stock en el modal
+function adjustModalStock(delta) {
+    const input = document.getElementById('editStock');
+    const newValue = Math.max(0, parseInt(input.value) + delta);
+    input.value = newValue;
+}
+
+// Función para abrir el modal de edición
 async function editProduct(productId) {
     try {
-        const productos = await fetchProducts();
-        const producto = productos.find(p => p.id === productId);
-        if (!producto) {
-            mostrarNotificacion('Error', 'Producto no encontrado', 'error');
-            return;
-        }
-
-        editingProductId = productId;
-        const form = document.getElementById('newProductForm');
+        const response = await fetch(`http://localhost:1000/productos/${productId}`);
+        if (!response.ok) throw new Error('Error al obtener el producto');
         
-        // Llenar el formulario con los datos del producto
-        const inputs = form.querySelectorAll('input, textarea');
-        inputs[0].value = producto.name; // Nombre
-        inputs[1].value = producto.id; // Código
-        inputs[2].value = producto.price; // Precio
-        inputs[3].value = producto.stock; // Stock
-        inputs[4].value = producto.category; // Categoría
-        inputs[5].value = producto.brand || ''; // Proveedor/Marca
-        inputs[6].value = producto.description || ''; // Descripción
+        const producto = await response.json();
+        editingProductId = productId;
 
-        toggleNewProduct(true);
+        // Llenar el modal con los datos del producto
+        document.getElementById('editName').value = producto.name;
+        document.getElementById('editCategory').value = producto.category;
+        document.getElementById('editStock').value = producto.stock;
+        document.getElementById('editPrice').value = producto.price;
+        document.getElementById('editDescription').value = producto.description || '';
+
+        // Mostrar el modal con animación
+        const modal = document.getElementById('editModal');
+        const modalContent = document.getElementById('modalContent');
+        
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        
+        // Forzar un reflow para que la animación funcione
+        void modal.offsetWidth;
+        
+        modalContent.classList.add('scale-100', 'opacity-100');
+        modalContent.classList.remove('scale-95', 'opacity-0');
+
+        // Agregar event listener para cerrar con Escape
+        document.addEventListener('keydown', handleEscapeKey);
+        
+        // Agregar event listener para cerrar al hacer clic fuera
+        modal.addEventListener('click', handleOutsideClick);
+
+        lucide.createIcons();
     } catch (error) {
-        console.error('Error al cargar el producto:', error);
-        mostrarNotificacion('Error', 'No se pudo cargar el producto', 'error');
+        console.error('Error:', error);
+        mostrarNotificacion('Error', 'No se pudo cargar el producto');
     }
+}
+
+// Función para manejar la tecla Escape
+function handleEscapeKey(e) {
+    if (e.key === 'Escape') {
+        cerrarModal();
+    }
+}
+
+// Función para manejar clic fuera del modal
+function handleOutsideClick(e) {
+    const modalContent = document.getElementById('modalContent');
+    if (e.target.id === 'editModal' && !modalContent.contains(e.target)) {
+        cerrarModal();
+    }
+}
+
+// Función para cerrar el modal
+function cerrarModal() {
+    const modal = document.getElementById('editModal');
+    const modalContent = document.getElementById('modalContent');
+    
+    // Iniciar animación de salida
+    modalContent.classList.remove('scale-100', 'opacity-100');
+    modalContent.classList.add('scale-95', 'opacity-0');
+    
+    // Esperar a que termine la animación antes de ocultar
+    setTimeout(() => {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+        
+        // Remover event listeners
+        document.removeEventListener('keydown', handleEscapeKey);
+        modal.removeEventListener('click', handleOutsideClick);
+    }, 300);
+
+    editingProductId = null;
+}
+
+// Función para guardar los cambios
+async function guardarCambios() {
+    try {
+        const productoData = {
+            name: document.getElementById('editName').value,
+            category: document.getElementById('editCategory').value,
+            stock: parseInt(document.getElementById('editStock').value),
+            price: parseFloat(document.getElementById('editPrice').value),
+            description: document.getElementById('editDescription').value
+        };
+
+        const response = await fetch(`http://localhost:1000/productos/${editingProductId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(productoData)
+        });
+
+        if (!response.ok) throw new Error('Error al actualizar el producto');
+
+        mostrarNotificacion('Éxito', 'Producto actualizado correctamente');
+        cerrarModal();
+        await cargadeproducto();
+    } catch (error) {
+        console.error('Error:', error);
+        mostrarNotificacion('Error', 'No se pudo actualizar el producto');
+    }
+}
+
+// Función para ajustar el stock directamente desde la tabla
+async function adjustStock(productId, delta) {
+    try {
+        const response = await fetch(`http://localhost:1000/productos/${productId}`);
+        if (!response.ok) throw new Error('Error al obtener el producto');
+        
+        const producto = await response.json();
+        const nuevoStock = Math.max(0, producto.stock + delta);
+
+        const updateResponse = await fetch(`http://localhost:1000/productos/${productId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                ...producto,
+                stock: nuevoStock
+            })
+        });
+
+        if (!updateResponse.ok) throw new Error('Error al actualizar el stock');
+
+        mostrarNotificacion('Éxito', 'Stock actualizado correctamente');
+        await cargadeproducto();
+    } catch (error) {
+        console.error('Error:', error);
+        mostrarNotificacion('Error', 'No se pudo actualizar el stock');
+    }
+}
+
+// Función para mostrar notificaciones
+function mostrarNotificacion(titulo, mensaje, tipo = 'success') {
+    const notificacion = document.createElement('div');
+    notificacion.className = `fixed bottom-4 right-4 bg-white rounded-lg shadow-lg border border-gray-200 p-4 z-50 animate-fade-in`;
+    notificacion.innerHTML = `
+        <div class="flex items-center gap-3">
+            <div class="flex-shrink-0 w-10 h-10 ${tipo === 'success' ? 'bg-green-100' : 'bg-red-100'} rounded-full flex items-center justify-center">
+                <i data-lucide="${tipo === 'success' ? 'check' : 'x'}" class="w-6 h-6 ${tipo === 'success' ? 'text-green-600' : 'text-red-600'}"></i>
+            </div>
+            <div>
+                <h4 class="text-sm font-medium text-gray-900">${titulo}</h4>
+                <p class="text-sm text-gray-500">${mensaje}</p>
+            </div>
+            <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-gray-400 hover:text-gray-600">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+    `;
+    document.body.appendChild(notificacion);
+    lucide.createIcons();
+
+    setTimeout(() => {
+        notificacion.remove();
+    }, 3000);
 }
 
 async function deleteProduct(productId) {
@@ -339,62 +482,5 @@ async function guardarProducto() {
     } catch (error) {
         console.error('Error:', error);
         mostrarNotificacion('Error', 'No se pudo guardar el producto', 'error');
-    }
-}
-
-function mostrarNotificacion(titulo, mensaje, tipo = 'success') {
-    const notificacion = document.createElement('div');
-    notificacion.className = `fixed bottom-4 right-4 bg-white rounded-lg shadow-lg border border-${tipo === 'success' ? 'green' : 'red'}-200 p-4 animate-fade-in z-50`;
-    notificacion.innerHTML = `
-        <div class="flex items-center gap-3">
-            <div class="flex-shrink-0 w-10 h-10 bg-${tipo === 'success' ? 'green' : 'red'}-100 rounded-full flex items-center justify-center">
-                <i data-lucide="${tipo === 'success' ? 'check-circle' : 'alert-circle'}" class="w-6 h-6 text-${tipo === 'success' ? 'green' : 'red'}-600"></i>
-            </div>
-            <div>
-                <h4 class="text-sm font-medium text-gray-900">${titulo}</h4>
-                <p class="text-sm text-gray-500">${mensaje}</p>
-            </div>
-            <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-gray-400 hover:text-gray-600">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
-        </div>
-    `;
-    document.body.appendChild(notificacion);
-    lucide.createIcons();
-
-    setTimeout(() => {
-        notificacion.remove();
-    }, 3000);
-}
-
-async function adjustStock(productId, delta = 1) {
-    try {
-        const productos = await fetchProducts();
-        const producto = productos.find(p => p.id === productId);
-        if (!producto) {
-            mostrarNotificacion('Error', 'Producto no encontrado', 'error');
-            return;
-        }
-
-        const nuevoStock = producto.stock + delta;
-        if (nuevoStock < 0) {
-            mostrarNotificacion('Error', 'El stock no puede ser negativo', 'error');
-            return;
-        }
-
-        // Actualizar el stock en el servidor
-        await fetch(`/api/products/${productId}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ stock: nuevoStock })
-        });
-
-        await cargadeproducto(); // Recargar la tabla
-        mostrarNotificacion('Éxito', 'Stock actualizado correctamente', 'success');
-    } catch (error) {
-        console.error('Error al ajustar el stock:', error);
-        mostrarNotificacion('Error', 'No se pudo actualizar el stock', 'error');
     }
 }

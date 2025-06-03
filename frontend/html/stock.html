@@ -651,6 +651,110 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal de Edición -->
+    <div id="editModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-[400px] transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
+            <div class="relative">
+                <!-- Header con diseño mejorado -->
+                <div class="bg-gradient-to-r from-primary to-primary-dark p-4 rounded-t-xl">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="package" class="w-5 h-5 text-white"></i>
+                            <h2 class="text-lg font-semibold text-white">Editar Producto</h2>
+                        </div>
+                        <button onclick="cerrarModal()" class="text-white/80 hover:text-white transition-colors">
+                            <i data-lucide="x" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Contenido del formulario -->
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <!-- Nombre del producto con icono -->
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
+                                <i data-lucide="tag" class="w-4 h-4 text-primary dark:text-blue-400"></i>
+                                Nombre
+                            </label>
+                            <input type="text" id="editName" 
+                                class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700/50 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-shadow hover:bg-gray-50 dark:hover:bg-gray-700">
+                        </div>
+
+                        <!-- Categoría con icono -->
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
+                                <i data-lucide="folder" class="w-4 h-4 text-primary dark:text-blue-400"></i>
+                                Categoría
+                            </label>
+                            <input type="text" id="editCategory" 
+                                class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700/50 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-shadow hover:bg-gray-50 dark:hover:bg-gray-700">
+                        </div>
+
+                        <!-- Contenedor flex para Stock y Precio -->
+                        <div class="flex gap-4">
+                            <!-- Stock con diseño mejorado -->
+                            <div class="flex-1 space-y-1.5">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
+                                    <i data-lucide="boxes" class="w-4 h-4 text-primary dark:text-blue-400"></i>
+                                    Stock
+                                </label>
+                                <div class="flex items-center bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-300 dark:border-gray-600 hover:border-primary/50 dark:hover:border-blue-400/50 transition-colors">
+                                    <button onclick="adjustModalStock(-1)" class="p-1.5 text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
+                                        <i data-lucide="minus-circle" class="w-4 h-4"></i>
+                                    </button>
+                                    <input type="number" id="editStock" class="w-full text-center bg-transparent border-0 focus:ring-0 text-sm" min="0">
+                                    <button onclick="adjustModalStock(1)" class="p-1.5 text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
+                                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Precio con diseño mejorado -->
+                            <div class="flex-1 space-y-1.5">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
+                                    <i data-lucide="tag" class="w-4 h-4 text-primary dark:text-blue-400"></i>
+                                    Precio
+                                </label>
+                                <div class="flex items-center">
+                                    <span class="text-gray-700 dark:text-gray-300 text-sm font-medium mr-1">$</span>
+                                    <input type="number" id="editPrice" 
+                                        class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700/50 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-shadow hover:bg-gray-50 dark:hover:bg-gray-700" 
+                                        min="0" step="0.01">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Descripción con icono -->
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
+                                <i data-lucide="align-left" class="w-4 h-4 text-primary dark:text-blue-400"></i>
+                                Descripción
+                            </label>
+                            <textarea id="editDescription" rows="2" 
+                                class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700/50 dark:text-white focus:border-primary focus:ring-primary/20 resize-none text-sm transition-shadow hover:bg-gray-50 dark:hover:bg-gray-700"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer con botones mejorados -->
+                <div class="border-t border-gray-200 dark:border-gray-700 p-4 flex justify-end gap-2 bg-gray-50 dark:bg-gray-800/50 rounded-b-xl">
+                    <button onclick="cerrarModal()" 
+                        class="px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 text-sm flex items-center gap-1.5 border border-gray-300 dark:border-gray-600">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                        Cancelar
+                    </button>
+                    <button onclick="guardarCambios()" 
+                        class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-all duration-200 text-sm flex items-center gap-1.5 shadow-lg shadow-primary/25">
+                        <i data-lucide="check" class="w-4 h-4"></i>
+                        Guardar Cambios
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="../js/theme.js"></script>
     <script src="../js/funciones.js"></script>
     <script src="../js/stock.js"></script>

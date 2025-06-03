@@ -531,7 +531,7 @@ async function finalizarVenta() {
         console.log('Objeto de venta creado:', objetoVenta);
 
         // Enviar la venta al servidor
-        const response = await fetch('http://localhost:1000/ventas', {
+        const response = await fetch('https://back-prof-agustin-2.onrender.com/ventas', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -544,6 +544,24 @@ async function finalizarVenta() {
         if (!response.ok) {
             throw new Error(responseData.message || responseData.error || 'Error al procesar la venta');
         }
+
+        // Preparar datos para el ticket
+        const ventaData = {
+            items: productos.map(prod => {
+                const tr = document.querySelector(`[data-codigo="${prod.id}"]`);
+                return {
+                    name: tr.querySelector('.text-sm.font-medium').textContent,
+                    quantity: prod.cantidad,
+                    price: parseFloat(tr.querySelector('td:nth-child(3)').textContent.replace('$', ''))
+                };
+            }),
+            subtotal: parseFloat(document.querySelector('[data-total="subtotal"]').textContent.replace('$', '')),
+            total: parseFloat(document.querySelector('[data-total="total"]').textContent.replace('$', '')),
+            metodoPago: metodoPago.value
+        };
+
+        // Mostrar el modal del ticket
+        showTicketModal(ventaData);
 
         // Mostrar notificación de éxito
         mostrarNotificacion('Venta Exitosa', 'La venta se ha registrado correctamente', 'success');
@@ -643,7 +661,7 @@ actualizarTotales = function() {
 async function buscarClientes(query = '') {
     try {
         // Obtener todos los clientes
-        const response = await fetch('http://localhost:1000/clientes');
+        const response = await fetch('https://back-prof-agustin-2.onrender.com/clientes');
         const clientes = await response.json();
 
         // Si no hay consulta, mostrar todos los clientes

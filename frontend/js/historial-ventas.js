@@ -37,7 +37,7 @@ let ventasTotales = [];
 // Función para cargar las ventas desde el servidor
 async function cargarVentas() {
     try {
-        const response = await fetch('http://localhost:1000/ventas');
+        const response = await fetch('https://back-prof-agustin-2.onrender.com/ventas');
         const ventas = await response.json();
         ventasTotales = ventas;
         actualizarEstadisticas(ventas);
@@ -150,7 +150,7 @@ function actualizarPaginacion(totalVentas) {
 // Función para mostrar los detalles de una venta
 async function mostrarDetalles(ventaId) {
     try {
-        const response = await fetch(`http://localhost:1000/ventas/${ventaId}`);
+        const response = await fetch(`https://back-prof-agustin-2.onrender.com/ventas/${ventaId}`);
         const venta = await response.json();
 
         const detallesContainer = document.getElementById('detallesVenta');

@@ -745,6 +745,84 @@
         </div>
     </div>
 
+    <!-- Modal del Ticket -->
+    <div id="ticketModal" class="fixed inset-0 backdrop-blur-sm bg-black/30 hidden items-center justify-center z-50">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl w-[450px] mx-4 relative">
+            <!-- Botón de cerrar -->
+            <button onclick="closeTicketModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+
+            <!-- Encabezado -->
+            <div class="mb-6">
+                <h2 class="text-lg font-medium text-gray-800 dark:text-gray-200">Ticket de Venta</h2>
+                <p id="ticketDateTime" class="text-sm text-gray-500 dark:text-gray-400"></p>
+                <p id="ticketNumber" class="text-sm text-primary"></p>
+            </div>
+
+            <!-- Información Cliente y Vendedor -->
+            <div class="flex justify-between mb-8">
+                <div>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Cliente:</p>
+                    <p id="ticketClientName" class="text-base text-gray-800 dark:text-gray-200"></p>
+                    <p id="ticketClientDNI" class="text-sm text-gray-500 dark:text-gray-400"></p>
+                </div>
+                <div class="text-right">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Vendedor:</p>
+                    <p id="ticketSellerName" class="text-base text-gray-800 dark:text-gray-200"></p>
+                    <p id="ticketSellerRole" class="text-sm text-gray-500 dark:text-gray-400"></p>
+                </div>
+            </div>
+
+            <!-- Productos -->
+            <div class="mb-8">
+                <!-- Encabezados -->
+                <div class="flex justify-between text-sm text-primary font-medium mb-4">
+                    <div class="w-48">Producto</div>
+                    <div class="w-20 text-center">Cant.</div>
+                    <div class="w-24 text-right">Importe</div>
+                </div>
+                
+                <!-- Lista de productos -->
+                <div id="ticketItems" class="space-y-2">
+                    <!-- Los items se insertarán dinámicamente aquí -->
+                </div>
+            </div>
+
+            <!-- Totales -->
+            <div class="space-y-2 mb-6">
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-500 dark:text-gray-400">Subtotal:</span>
+                    <span id="ticketSubtotal" class="text-gray-800 dark:text-gray-200"></span>
+                </div>
+                <div id="ticketRecargoContainer" class="flex justify-between text-sm hidden">
+                    <span class="text-gray-500 dark:text-gray-400">Recargo:</span>
+                    <span id="ticketRecargo" class="text-amber-600"></span>
+                </div>
+                <div class="flex justify-between text-base font-medium">
+                    <span class="text-gray-800 dark:text-gray-200">Total:</span>
+                    <span id="ticketTotal" class="text-primary"></span>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-500 dark:text-gray-400">Método de Pago:</span>
+                    <span id="ticketPaymentMethod" class="text-gray-800 dark:text-gray-200"></span>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="flex gap-3">
+                <button onclick="imprimirTicket()" class="flex-1 flex items-center justify-center py-2.5 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-dark transition-colors">
+                    <i data-lucide="printer" class="w-4 h-4 mr-2"></i>
+                    Imprimir
+                </button>
+                <button onclick="enviarTicketPorEmail()" class="flex-1 flex items-center justify-center py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                    <i data-lucide="mail" class="w-4 h-4 mr-2"></i>
+                    Email
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="../js/funciones.js"></script>
     <script src="../js/theme.js"></script>
     <script src="../js/ventas.js"></script>

@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Función para validar las credenciales
     async function validarCredenciales(username, password) {
         try {
-            const response = await fetch('http://localhost:1000/empleados');
+            const response = await fetch('https://back-prof-agustin-2.onrender.com/empleados');
             const empleados = await response.json();
             
             // Buscar el empleado que coincida con el usuario y contraseña

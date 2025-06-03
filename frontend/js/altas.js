@@ -200,7 +200,7 @@ document.querySelectorAll('form').forEach(form => {
                 };
 
                 // Enviar datos al servidor
-                const response = await fetch('http://localhost:1000/empleados/postEmpleado', {
+                const response = await fetch('https://back-prof-agustin-2.onrender.com/empleados/postEmpleado', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -259,7 +259,7 @@ document.querySelectorAll('form').forEach(form => {
                 };
 
                 // Enviar datos al servidor
-                const response = await fetch('http://localhost:1000/clientes/postClient', {
+                const response = await fetch('https://back-prof-agustin-2.onrender.com/clientes/postClient', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

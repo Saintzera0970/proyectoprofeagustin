@@ -257,7 +257,7 @@ function adjustModalStock(delta) {
 // Función para abrir el modal de edición
 async function editProduct(productId) {
     try {
-        const response = await fetch(`http://localhost:1000/productos/${productId}`);
+        const response = await fetch(`https://back-prof-agustin-2.onrender.com/productos/${productId}`);
         if (!response.ok) throw new Error('Error al obtener el producto');
         
         const producto = await response.json();
@@ -359,7 +359,7 @@ async function guardarCambios() {
             description: description || null // Si está vacío, enviar null
         };
 
-        const response = await fetch(`http://localhost:1000/productos/${editingProductId}`, {
+        const response = await fetch(`https://back-prof-agustin-2.onrender.com/productos/${editingProductId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -384,13 +384,13 @@ async function guardarCambios() {
 // Función para ajustar el stock directamente desde la tabla
 async function adjustStock(productId, delta) {
     try {
-        const response = await fetch(`http://localhost:1000/productos/${productId}`);
+        const response = await fetch(`https://back-prof-agustin-2.onrender.com/productos/${productId}`);
         if (!response.ok) throw new Error('Error al obtener el producto');
         
         const producto = await response.json();
         const nuevoStock = Math.max(0, producto.stock + delta);
 
-        const updateResponse = await fetch(`http://localhost:1000/productos/${productId}`, {
+        const updateResponse = await fetch(`https://back-prof-agustin-2.onrender.com/productos/${productId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -443,7 +443,7 @@ async function deleteProduct(productId) {
     }
 
     try {
-        const response = await fetch(`http://localhost:1000/productos/${productId}`, {
+        const response = await fetch(`https://back-prof-agustin-2.onrender.com/productos/${productId}`, {
             method: 'DELETE'
         });
 
@@ -478,7 +478,7 @@ async function guardarProducto() {
     };
 
     try {
-        const response = await fetch('http://localhost:1000/productos', {
+        const response = await fetch('https://back-prof-agustin-2.onrender.com/productos', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

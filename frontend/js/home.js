@@ -37,4 +37,13 @@ document.querySelectorAll('.card').forEach(card => {
     card.addEventListener('mouseout', () => {
         card.style.transform = 'translateY(0)';
     });
-}); 
+});
+
+// Función para cerrar sesión
+function cerrarSesion() {
+    // Eliminar datos del empleado del localStorage
+    localStorage.removeItem('empleadoData');
+    
+    // Redirigir al index
+    window.location.href = '/frontend/html/index.html';
+} 

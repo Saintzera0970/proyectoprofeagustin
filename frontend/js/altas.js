@@ -29,6 +29,11 @@ function updateDateTime() {
 setInterval(updateDateTime, 1000);
 updateDateTime();
 
+// Variables globales para la paginación
+let paginaActual = 1;
+const ventasPorPagina = 10;
+let ventasTotales = [];
+
 // Función para cambiar entre pestañas
 function showTab(tabId) {
     // Ocultar todas las pestañas
@@ -55,24 +60,34 @@ function showTab(tabId) {
     }
 }
 
-// Función para mostrar/ocultar campos de cuenta corriente
-function toggleCuentaCorriente(value) {
-    const cuentaCorrienteFields = document.getElementById('cuenta-corriente-fields');
-    const limiteCreditoInput = cuentaCorrienteFields.querySelector('input[type="number"]');
+// Función para mostrar/ocultar campos de contraseña según el rol
+function togglePasswordField(rol) {
+    const passwordFields = document.getElementById('password-fields');
+    if (!passwordFields) return; // Evitar error si el elemento no existe
     
-    if (value === 'cuenta_corriente') {
-        cuentaCorrienteFields.classList.remove('hidden');
-        limiteCreditoInput.required = true;
+    const passwordInputs = passwordFields.querySelectorAll('input[type="password"]');
+    
+    // Solo mostrar contraseña para Cajero/a
+    if (rol === 'Cajero/a') {
+        passwordFields.classList.remove('hidden');
+        passwordInputs.forEach(input => input.required = true);
     } else {
-        cuentaCorrienteFields.classList.add('hidden');
-        limiteCreditoInput.required = false;
+        passwordFields.classList.add('hidden');
+        passwordInputs.forEach(input => {
+            input.required = false;
+            input.value = ''; // Limpiar valores
+        });
     }
 }
 
 // Función para mostrar/ocultar contraseña
-function togglePassword(button) {
-    const input = button.parentElement.querySelector('input');
+function togglePasswordVisibility(button) {
+    if (!button) return; // Evitar error si el botón es null
+    
+    const input = button.parentElement?.querySelector('input');
     const icon = button.querySelector('i');
+    
+    if (!input || !icon) return; // Evitar error si no se encuentran los elementos
     
     if (input.type === 'password') {
         input.type = 'text';
@@ -84,100 +99,188 @@ function togglePassword(button) {
     lucide.createIcons();
 }
 
+// Función para mostrar notificaciones
+function mostrarNotificacion(titulo, mensaje, tipo = 'success') {
+    const notificacion = document.createElement('div');
+    const esExito = tipo === 'success';
+    
+    notificacion.className = `fixed top-4 right-4 ${esExito ? 'bg-green-100' : 'bg-red-100'} rounded-lg shadow-lg p-4 z-50 transition-all duration-300 transform translate-x-full`;
+    notificacion.innerHTML = `
+        <div class="flex items-center gap-3">
+            <div class="flex-shrink-0 w-10 h-10 ${esExito ? 'bg-green-500' : 'bg-red-500'} rounded-full flex items-center justify-center">
+                <i data-lucide="${esExito ? 'check' : 'x'}" class="w-6 h-6 text-white"></i>
+            </div>
+            <div class="min-w-[200px]">
+                <h4 class="text-sm font-medium text-gray-900">${titulo}</h4>
+                <p class="text-sm text-gray-700">${mensaje}</p>
+            </div>
+            <button onclick="this.parentElement.parentElement.remove()" class="ml-auto text-gray-500 hover:text-gray-700">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(notificacion);
+    lucide.createIcons();
+
+    // Animación de entrada
+    requestAnimationFrame(() => {
+        notificacion.style.transform = 'translateX(0)';
+    });
+
+    // Eliminar la notificación después de 3 segundos
+    setTimeout(() => {
+        notificacion.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (notificacion && notificacion.parentElement) {
+                notificacion.remove();
+            }
+        }, 300);
+    }, 3000);
+}
+
 // Validar formularios antes de enviar
 document.querySelectorAll('form').forEach(form => {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        // Validar campos requeridos
-        const requiredFields = form.querySelectorAll('[required]');
-        let isValid = true;
-        
-        requiredFields.forEach(field => {
-            if (!field.value.trim()) {
-                isValid = false;
-                field.classList.add('border-red-500');
-                
-                // Mostrar mensaje de error
-                const errorMessage = field.parentElement.querySelector('.error-message');
-                if (!errorMessage) {
-                    const message = document.createElement('span');
-                    message.className = 'text-xs text-red-500 error-message';
-                    message.textContent = 'Este campo es obligatorio';
-                    field.parentElement.appendChild(message);
+        try {
+            // Verificar si es el formulario de empleados
+            if (form.closest('#empleados')) {
+                const nombreInput = form.querySelector('input[placeholder="Nombre y Apellido"]');
+                const telefonoInput = form.querySelector('input[placeholder="Número de teléfono"]');
+                const rolSelect = form.querySelector('select[onchange="togglePasswordField(this.value)"]');
+                const statusSelect = form.querySelector('select[required]');
+
+                // Verificar que todos los elementos existen
+                if (!nombreInput || !telefonoInput || !rolSelect || !statusSelect) {
+                    throw new Error('Error en el formulario: faltan elementos requeridos');
                 }
-            }
-        });
-        
-        if (isValid) {
-            try {
-                // Verificar si es el formulario de productos
-                if (form.closest('#productos')) {
-                    // Obtener los valores del formulario
-                    const marca = form.querySelector('input[placeholder="Marca"]').value;
-                    const nombre = form.querySelector('input[placeholder="Nombre del producto"]').value;
-                    const precio = parseFloat(form.querySelector('input[type="number"][min="0"][step="0.01"]').value);
-                    const stock = parseInt(form.querySelector('input[type="number"][min="0"]:not([step])').value);
-                    const descripcion = form.querySelector('textarea').value;
 
-                    // Crear objeto con los datos del producto
-                    const productoData = {
-                        brand: marca,
-                        name: nombre,
-                        price: precio,
-                        stock: stock,
-                        description: descripcion || null // Si no hay descripción, enviar null
-                    };
+                const nombre = nombreInput.value.trim();
+                const telefono = telefonoInput.value.trim();
+                const rol = rolSelect.value;
+                const status = statusSelect.value;
+                
+                // Validar campos requeridos
+                if (!nombre || !telefono || !rol || !status) {
+                    throw new Error('Por favor complete todos los campos requeridos');
+                }
 
-                    // Enviar datos al servidor
-                    const response = await fetch('http://localhost:1000/productos', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(productoData)
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Error al guardar el producto');
+                // Validar contraseña solo para Cajero/a
+                let password = null;
+                
+                if (rol === 'Cajero/a') {
+                    const passwordFields = document.getElementById('password-fields');
+                    if (!passwordFields) {
+                        throw new Error('Error en el formulario: campos de contraseña no encontrados');
                     }
 
-                    // Limpiar formulario
-                    form.reset();
+                    const pass1 = passwordFields.querySelector('.input-group:first-child input[type="password"]')?.value;
+                    const pass2 = passwordFields.querySelector('.input-group:last-child input[type="password"]')?.value;
                     
-                    // Mostrar mensaje de éxito
-                    const successMessage = document.createElement('div');
-                    successMessage.className = 'fixed bottom-4 right-4 bg-green-50 text-green-800 px-4 py-3 rounded-lg shadow-lg flex items-center gap-2';
-                    successMessage.innerHTML = `
-                        <i data-lucide="check-circle" class="w-5 h-5"></i>
-                        <span>Producto guardado correctamente</span>
-                    `;
-                    document.body.appendChild(successMessage);
-                    lucide.createIcons();
+                    if (!pass1 || pass1.length < 8) {
+                        throw new Error('La contraseña debe tener al menos 8 caracteres');
+                    }
                     
-                    // Eliminar mensaje después de 3 segundos
-                    setTimeout(() => {
-                        successMessage.remove();
-                    }, 3000);
+                    if (pass1 !== pass2) {
+                        throw new Error('Las contraseñas no coinciden');
+                    }
+                    
+                    password = pass1;
                 }
-            } catch (error) {
-                console.error('Error:', error);
+
+                // Crear objeto con los datos del empleado
+                const empleadoData = {
+                    nombre,
+                    telefono,
+                    rol,
+                    status,
+                    password
+                };
+
+                // Enviar datos al servidor
+                const response = await fetch('http://localhost:1000/empleados/postEmpleado', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(empleadoData)
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.message || 'Error al guardar el empleado');
+                }
+
+                // Limpiar formulario
+                form.reset();
+                const passwordFields = document.getElementById('password-fields');
+                if (passwordFields) {
+                    passwordFields.classList.add('hidden');
+                }
                 
-                // Mostrar mensaje de error
-                const errorMessage = document.createElement('div');
-                errorMessage.className = 'fixed bottom-4 right-4 bg-red-50 text-red-800 px-4 py-3 rounded-lg shadow-lg flex items-center gap-2';
-                errorMessage.innerHTML = `
-                    <i data-lucide="alert-circle" class="w-5 h-5"></i>
-                    <span>Error al guardar el producto</span>
-                `;
-                document.body.appendChild(errorMessage);
-                lucide.createIcons();
-                
-                // Eliminar mensaje después de 3 segundos
-                setTimeout(() => {
-                    errorMessage.remove();
-                }, 3000);
+                // Mostrar mensaje de éxito
+                mostrarNotificacion('Éxito', 'Empleado guardado correctamente', 'success');
             }
+            // Verificar si es el formulario de clientes
+            if (form.closest('#clientes')) {
+                const nombreInput = form.querySelector('input[type="text"][required]');
+                const dniInput = form.querySelector('input[placeholder="DNI/CUIT"]');
+                const telefonoInput = form.querySelector('input[type="tel"]');
+                const direccionInput = form.querySelector('input[placeholder="Dirección"]');
+
+                // Verificar que los elementos obligatorios existen
+                if (!nombreInput || !dniInput) {
+                    throw new Error('Error en el formulario: faltan elementos requeridos');
+                }
+
+                const nombre = nombreInput.value.trim();
+                const dni = dniInput.value.trim();
+                const telefono = telefonoInput ? telefonoInput.value.trim() : '';
+                const direccion = direccionInput ? direccionInput.value.trim() : '';
+                
+                // Validar campos requeridos
+                if (!nombre || !dni) {
+                    throw new Error('Por favor complete los campos obligatorios (Nombre y DNI)');
+                }
+
+                // Validar formato de DNI (solo números)
+                if (!/^\d+$/.test(dni)) {
+                    throw new Error('El DNI debe contener solo números, sin puntos ni espacios');
+                }
+
+                // Crear objeto con los datos del cliente
+                const clienteData = {
+                    nombre,
+                    dni,
+                    telefono,
+                    direccion
+                };
+
+                // Enviar datos al servidor
+                const response = await fetch('http://localhost:1000/clientes/postClient', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(clienteData)
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.message || 'Error al guardar el cliente');
+                }
+
+                // Limpiar formulario
+                form.reset();
+                
+                // Mostrar mensaje de éxito
+                mostrarNotificacion('Éxito', 'Cliente guardado correctamente', 'success');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            mostrarNotificacion('Error', error.message, 'error');
         }
     });
     
@@ -191,4 +294,13 @@ document.querySelectorAll('form').forEach(form => {
             }
         });
     });
-}); 
+});
+
+// Función para cerrar sesión
+function cerrarSesion() {
+    // Eliminar datos del empleado del localStorage
+    localStorage.removeItem('empleadoData');
+    
+    // Redirigir al index
+    window.location.href = '/frontend/html/index.html';
+} 

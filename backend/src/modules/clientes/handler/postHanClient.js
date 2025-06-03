@@ -1,18 +1,16 @@
 import { newCliente } from '../controller/postClient.js'
 
-
-
 export const postHanClient = async (req, res) => {
     try {
-      const { nombre, email, telefono } = req.body;
+      const { nombre, dni, telefono, direccion } = req.body;
   
-      if (!nombre || !email || !telefono) {
-        return res.status(400).json({ message: 'Faltan datos' });
+      if (!nombre || !dni) {
+        return res.status(400).json({ message: 'El nombre y DNI son campos obligatorios' });
       }
-      const result = await newCliente(nombre, email, telefono);
+      const result = await newCliente(nombre, dni, telefono, direccion);
       console.log(result);
       
-        res.status(201).json({message: 'user creado', result});
+      res.status(201).json({message: 'Cliente creado exitosamente', result});
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

@@ -22,8 +22,8 @@ conn.sync({force:true}).then(()=>{
     server.listen(1000, () => {
       UploadClients()
       UploadEmployees()
-      UploadOrders()
-      UploadProducts()
+      // UploadOrders()
+      // UploadProducts()
          console.log('Server run in url : http://localhost:1000/');
        });
 })

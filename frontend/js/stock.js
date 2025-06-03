@@ -53,7 +53,7 @@ function filterProducts(query) {
     productosFiltrados = !query ? [...productos] : productos.filter(producto => {
         const searchableFields = [
             normalizeText(producto.name),
-            normalizeText(producto.category),
+            normalizeText(producto.brand),
             normalizeText(producto.description),
             normalizeText(producto.id),
             normalizeText(producto.price),
@@ -106,13 +106,13 @@ function actualizarTabla() {
                             ${producto.name}
                         </div>
                         <div class="text-sm text-gray-500">
-                            ${producto.description || 'Sin descripción'}
+                            ${producto.description ? (producto.description.length > 50 ? producto.description.substring(0, 50) + '...' : producto.description) : 'Sin descripción'}
                         </div>
                     </div>
                 </div>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                ${producto.category}
+                ${producto.brand || 'Sin marca'}
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center">
@@ -248,8 +248,10 @@ function toggleNewProduct(isEditing = false) {
 // Función para ajustar el stock en el modal
 function adjustModalStock(delta) {
     const input = document.getElementById('editStock');
-    const newValue = Math.max(0, parseInt(input.value) + delta);
+    const newValue = Math.max(0, parseInt(input.value || 0) + delta);
     input.value = newValue;
+    // Prevenir la propagación del evento
+    event.stopPropagation();
 }
 
 // Función para abrir el modal de edición
@@ -262,8 +264,8 @@ async function editProduct(productId) {
         editingProductId = productId;
 
         // Llenar el modal con los datos del producto
+        document.getElementById('editBrand').value = producto.brand;
         document.getElementById('editName').value = producto.name;
-        document.getElementById('editCategory').value = producto.category;
         document.getElementById('editStock').value = producto.stock;
         document.getElementById('editPrice').value = producto.price;
         document.getElementById('editDescription').value = producto.description || '';
@@ -287,6 +289,9 @@ async function editProduct(productId) {
         // Agregar event listener para cerrar al hacer clic fuera
         modal.addEventListener('click', handleOutsideClick);
 
+        // Prevenir que los clics dentro del modal lo cierren
+        modalContent.addEventListener('click', (e) => e.stopPropagation());
+
         lucide.createIcons();
     } catch (error) {
         console.error('Error:', error);
@@ -304,7 +309,7 @@ function handleEscapeKey(e) {
 // Función para manejar clic fuera del modal
 function handleOutsideClick(e) {
     const modalContent = document.getElementById('modalContent');
-    if (e.target.id === 'editModal' && !modalContent.contains(e.target)) {
+    if (e.target.id === 'editModal') {
         cerrarModal();
     }
 }
@@ -334,12 +339,24 @@ function cerrarModal() {
 // Función para guardar los cambios
 async function guardarCambios() {
     try {
+        // Obtener y validar los datos
+        const brand = document.getElementById('editBrand').value.trim();
+        const name = document.getElementById('editName').value.trim();
+        const stock = parseInt(document.getElementById('editStock').value) || 0;
+        const price = parseFloat(document.getElementById('editPrice').value) || 0;
+        const description = document.getElementById('editDescription').value.trim();
+
+        // Validar datos requeridos
+        if (!brand || !name || price <= 0) {
+            throw new Error('Por favor complete todos los campos requeridos');
+        }
+
         const productoData = {
-            name: document.getElementById('editName').value,
-            category: document.getElementById('editCategory').value,
-            stock: parseInt(document.getElementById('editStock').value),
-            price: parseFloat(document.getElementById('editPrice').value),
-            description: document.getElementById('editDescription').value
+            brand,
+            name,
+            stock: Math.max(0, stock), // Asegurar que el stock no sea negativo
+            price: Number(price.toFixed(2)), // Formatear precio a 2 decimales
+            description: description || null // Si está vacío, enviar null
         };
 
         const response = await fetch(`http://localhost:1000/productos/${editingProductId}`, {
@@ -350,14 +367,17 @@ async function guardarCambios() {
             body: JSON.stringify(productoData)
         });
 
-        if (!response.ok) throw new Error('Error al actualizar el producto');
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Error al actualizar el producto');
+        }
 
         mostrarNotificacion('Éxito', 'Producto actualizado correctamente');
         cerrarModal();
         await cargadeproducto();
     } catch (error) {
         console.error('Error:', error);
-        mostrarNotificacion('Error', 'No se pudo actualizar el producto');
+        mostrarNotificacion('Error', error.message || 'No se pudo actualizar el producto', 'error');
     }
 }
 
@@ -423,14 +443,12 @@ async function deleteProduct(productId) {
     }
 
     try {
-        await fetch(`/api/products/${productId}`, {
+        const response = await fetch(`http://localhost:1000/productos/${productId}`, {
             method: 'DELETE'
         });
 
-        // Eliminar la fila de la tabla
-        const row = document.querySelector(`tr[data-product-id="${productId}"]`);
-        if (row) {
-            row.remove();
+        if (!response.ok) {
+            throw new Error('Error al eliminar el producto');
         }
 
         mostrarNotificacion('Éxito', 'Producto eliminado correctamente', 'success');
@@ -443,24 +461,25 @@ async function deleteProduct(productId) {
 
 async function guardarProducto() {
     const form = document.getElementById('newProductForm');
-    const inputs = form.querySelectorAll('input, textarea');
     
+    // Obtener los valores del formulario
+    const marca = form.querySelector('input[placeholder="Marca"]').value;
+    const nombre = form.querySelector('input[placeholder="Nombre del producto"]').value;
+    const precio = parseFloat(form.querySelector('input[type="number"][step="0.01"]').value);
+    const stock = parseInt(form.querySelector('input[type="number"]:not([step])').value);
+    const descripcion = form.querySelector('textarea').value;
+
     const productoData = {
-        name: inputs[0].value,
-        id: inputs[1].value,
-        price: parseFloat(inputs[2].value),
-        stock: parseInt(inputs[3].value),
-        category: inputs[4].value,
-        brand: inputs[5].value,
-        description: inputs[6].value
+        brand: marca,
+        name: nombre,
+        price: precio,
+        stock: stock,
+        description: descripcion || null // Si no hay descripción, enviar null
     };
 
     try {
-        const method = editingProductId ? 'PUT' : 'POST';
-        const url = editingProductId ? `/api/products/${editingProductId}` : '/api/products';
-
-        const response = await fetch(url, {
-            method,
+        const response = await fetch('http://localhost:1000/productos', {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -473,7 +492,7 @@ async function guardarProducto() {
 
         mostrarNotificacion(
             'Éxito',
-            editingProductId ? 'Producto actualizado correctamente' : 'Producto guardado correctamente',
+            'Producto guardado correctamente',
             'success'
         );
 
@@ -481,6 +500,15 @@ async function guardarProducto() {
         await cargadeproducto(); // Recargar la tabla
     } catch (error) {
         console.error('Error:', error);
-        mostrarNotificacion('Error', 'No se pudo guardar el producto', 'error');
+        mostrarNotificacion('Error', 'Error al guardar el producto', 'error');
     }
+}
+
+// Función para cerrar sesión
+function cerrarSesion() {
+    // Eliminar datos del empleado del localStorage
+    localStorage.removeItem('empleadoData');
+    
+    // Redirigir al index
+    window.location.href = '/frontend/html/index.html';
 }

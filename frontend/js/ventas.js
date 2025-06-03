@@ -286,65 +286,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Función para limpiar la venta actual
 function cancelarVenta() {
-    // Limpiar la lista de productos
-    const productList = document.getElementById('productList');
-    productList.innerHTML = '';
-
-    // Reiniciar los totales
-    document.querySelector('[data-total="subtotal"]').textContent = '$0.00';
-    document.querySelector('[data-total="recargo"]').textContent = '$0.00';
-    document.querySelector('[data-total="total"]').textContent = '$0.00';
-
-    // Ocultar recargo de transferencia
-    document.getElementById('recargo-transferencia').classList.add('hidden');
-
-    // Limpiar la búsqueda
-    const inputBusqueda = document.querySelector('input[type="text"]');
-    if (inputBusqueda) {
-        inputBusqueda.value = '';
-    }
-    document.getElementById('resultadosBusqueda').classList.add('hidden');
-
-    // Reiniciar método de pago
-    const metodoPagoDefault = document.querySelector('input[name="payment_method"]');
-    if (metodoPagoDefault) {
-        metodoPagoDefault.checked = false;
-    }
-    document.querySelectorAll('.payment-fields').forEach(fields => {
-        fields.classList.add('hidden');
-    });
-    document.querySelectorAll('.payment-method').forEach(method => {
-        method.classList.remove('selected');
-    });
-
-    // Mostrar mensaje de confirmación
-    mostrarNotificacion('Venta cancelada', 'Se han eliminado todos los productos');
+    limpiarFormularioVenta();
+    mostrarNotificacion('Venta Cancelada', 'Se han eliminado todos los productos', 'error');
 }
 
 // Función para mostrar notificaciones
-function mostrarNotificacion(titulo, mensaje) {
+function mostrarNotificacion(titulo, mensaje, tipo = 'success') {
     const notificacion = document.createElement('div');
-    notificacion.className = 'fixed bottom-4 right-4 bg-white rounded-lg shadow-lg border border-gray-200 p-4 animate-fade-in z-50';
+    const esExito = tipo === 'success';
+    
+    notificacion.className = `fixed top-4 right-4 ${esExito ? 'bg-green-100' : 'bg-red-100'} rounded-lg shadow-lg p-4 z-50 transition-all duration-300 transform translate-x-full`;
     notificacion.innerHTML = `
         <div class="flex items-center gap-3">
-            <div class="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                <i data-lucide="check-circle" class="w-6 h-6 text-primary"></i>
+            <div class="flex-shrink-0 w-10 h-10 ${esExito ? 'bg-green-500' : 'bg-red-500'} rounded-full flex items-center justify-center">
+                <i data-lucide="${esExito ? 'check' : 'x'}" class="w-6 h-6 text-white"></i>
             </div>
-            <div>
+            <div class="min-w-[200px]">
                 <h4 class="text-sm font-medium text-gray-900">${titulo}</h4>
-                <p class="text-sm text-gray-500">${mensaje}</p>
+                <p class="text-sm text-gray-700">${mensaje}</p>
             </div>
-            <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-gray-400 hover:text-gray-600">
+            <button onclick="this.parentElement.parentElement.remove()" class="ml-auto text-gray-500 hover:text-gray-700">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
         </div>
     `;
+    
     document.body.appendChild(notificacion);
     lucide.createIcons();
 
+    // Animación de entrada
+    requestAnimationFrame(() => {
+        notificacion.style.transform = 'translateX(0)';
+    });
+
     // Eliminar la notificación después de 3 segundos
     setTimeout(() => {
-        notificacion.remove();
+        notificacion.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (notificacion && notificacion.parentElement) {
+                notificacion.remove();
+            }
+        }, 300);
     }, 3000);
 }
 
@@ -468,29 +450,59 @@ function actualizarEstadoCuenta() {
 
 // Función para crear el objeto de venta
 function crearObjetoVenta() {
-    // Obtener el empleado del localStorage
-    const empleadoData = JSON.parse(localStorage.getItem('empleadoData'));
-    if (!empleadoData) {
-        throw new Error('No hay información del empleado. Por favor, inicie sesión nuevamente.');
+    // Obtener el método de pago seleccionado
+    const metodoPagoElement = document.querySelector('input[name="payment_method"]:checked');
+    if (!metodoPagoElement) {
+        throw new Error('Por favor, seleccione un método de pago');
     }
-
-    const metodoPago = document.querySelector('input[name="payment_method"]:checked');
-    const productos = obtenerProductosVenta();
-    const total = parseFloat(document.querySelector('[data-total="total"]').textContent.replace('$', '')) || 0;
+    const metodoPago = metodoPagoElement.value;
     
-    const venta = {
-        empleadoId: empleadoData.id,
-        clienteId: clienteSeleccionado ? clienteSeleccionado.id : null,
-        payMethod: metodoPago ? metodoPago.value : "efectivo",
-        delivery: document.getElementById('ventaDelivery').checked,
-        description: document.getElementById('ventaDescripcion').value.trim(),
-        productId: productos.map(producto => ({  // Cambiamos productos por productId
-            id: parseInt(producto.id),
-            quantity: parseInt(producto.cantidad)  // Aseguramos que quantity sea un número
-        }))
-};
-
-    return venta;
+    // Obtener el valor del checkbox de delivery
+    const deliveryElement = document.getElementById('delivery');
+    const delivery = deliveryElement ? deliveryElement.checked : false;
+    
+    // Obtener la descripción
+    const descripcionElement = document.getElementById('descripcion');
+    const description = descripcionElement ? descripcionElement.value || '' : '';
+    
+    // Obtener los productos y sus cantidades
+    const productosElements = document.querySelectorAll('.product-item');
+    if (!productosElements.length) {
+        throw new Error('No hay productos agregados a la venta');
+    }
+    
+    const productos = Array.from(productosElements).map(item => {
+        const cantidad = item.querySelector('input[type="number"]');
+        if (!cantidad || !cantidad.value) {
+            throw new Error('Error al obtener la cantidad de un producto');
+        }
+        return {
+            id: parseInt(item.getAttribute('data-codigo')),
+            quantity: parseInt(cantidad.value)
+        };
+    });
+    
+    // Obtener el ID del cliente seleccionado
+    const clienteId = clienteSeleccionado ? clienteSeleccionado.id.toString() : '';
+    
+    // Obtener el ID del empleado desde localStorage
+    const empleadoData = JSON.parse(localStorage.getItem('empleadoData'));
+    if (!empleadoData || !empleadoData.id) {
+        throw new Error('No hay información del empleado. Por favor, inicie sesión nuevamente');
+    }
+    const empleadoId = empleadoData.id.toString();
+    
+    // Crear el objeto de venta con la estructura requerida
+    const ventaObj = {
+        payMethod: metodoPago,
+        delivery: delivery,
+        description: description,
+        productId: productos,
+        clienteId: clienteId,
+        empleadoId: empleadoId
+    };
+    
+    return ventaObj;
 }
 
 async function finalizarVenta() {
@@ -498,19 +510,19 @@ async function finalizarVenta() {
         // Validaciones básicas
         const productos = obtenerProductosVenta();
         if (productos.length === 0) {
-            mostrarNotificacion('Error', 'No hay productos en la venta');
+            mostrarNotificacion('Error', 'No hay productos en la venta', 'error');
             return;
         }
 
         const metodoPago = document.querySelector('input[name="payment_method"]:checked');
         if (!metodoPago) {
-            mostrarNotificacion('Error', 'Seleccione un método de pago');
+            mostrarNotificacion('Error', 'Seleccione un método de pago', 'error');
             return;
         }
 
         // Validaciones específicas por método de pago
         if (metodoPago.value === 'cuenta_corriente' && !clienteSeleccionado) {
-            mostrarNotificacion('Error', 'Seleccione un cliente para cuenta corriente');
+            mostrarNotificacion('Error', 'Seleccione un cliente para cuenta corriente', 'error');
             return;
         }
 
@@ -519,35 +531,70 @@ async function finalizarVenta() {
         console.log('Objeto de venta creado:', objetoVenta);
 
         // Enviar la venta al servidor
-        try {
-            const response = await fetch('http://localhost:1000/ventas', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(objetoVenta)
-            });
+        const response = await fetch('http://localhost:1000/ventas', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(objetoVenta)
+        });
 
-            if (!response.ok) {
-                throw new Error('Error al enviar la venta al servidor');
-            }
+        const responseData = await response.json();
 
-            // Mostrar notificación de éxito
-            mostrarNotificacion('Éxito', 'Venta finalizada correctamente');
-
-            // Limpiar el formulario
-            cancelarVenta();
-            
-            // Limpiar cliente seleccionado
-            quitarClienteSeleccionado();
-        } catch (error) {
-            console.error('Error al enviar la venta:', error);
-            mostrarNotificacion('Error', 'Error al enviar la venta al servidor');
+        if (!response.ok) {
+            throw new Error(responseData.message || responseData.error || 'Error al procesar la venta');
         }
-        
+
+        // Mostrar notificación de éxito
+        mostrarNotificacion('Venta Exitosa', 'La venta se ha registrado correctamente', 'success');
+
+        // Limpiar el formulario después de mostrar el éxito
+        limpiarFormularioVenta();
+
     } catch (error) {
         console.error('Error al finalizar la venta:', error);
-        mostrarNotificacion('Error', error.message || 'Ocurrió un error al finalizar la venta');
+        const mensajeError = typeof error === 'string' ? error : 
+                           error.message || 'Ocurrió un error al finalizar la venta';
+        mostrarNotificacion('Error', mensajeError, 'error');
+    }
+}
+
+// Función para limpiar el formulario después de una venta
+function limpiarFormularioVenta() {
+    // Limpiar la lista de productos
+    const productList = document.getElementById('productList');
+    productList.innerHTML = '';
+
+    // Reiniciar los totales
+    document.querySelector('[data-total="subtotal"]').textContent = '$0.00';
+    document.querySelector('[data-total="recargo"]').textContent = '$0.00';
+    document.querySelector('[data-total="total"]').textContent = '$0.00';
+
+    // Ocultar recargo de transferencia
+    document.getElementById('recargo-transferencia').classList.add('hidden');
+
+    // Limpiar la búsqueda
+    const inputBusqueda = document.querySelector('input[type="text"]');
+    if (inputBusqueda) {
+        inputBusqueda.value = '';
+    }
+    document.getElementById('resultadosBusqueda').classList.add('hidden');
+
+    // Reiniciar método de pago
+    const metodoPagoDefault = document.querySelector('input[name="payment_method"]');
+    if (metodoPagoDefault) {
+        metodoPagoDefault.checked = false;
+    }
+    document.querySelectorAll('.payment-fields').forEach(fields => {
+        fields.classList.add('hidden');
+    });
+    document.querySelectorAll('.payment-method').forEach(method => {
+        method.classList.remove('selected');
+    });
+
+    // Limpiar cliente seleccionado si existe
+    if (clienteSeleccionado) {
+        quitarClienteSeleccionado();
     }
 }
 
@@ -643,4 +690,13 @@ document.addEventListener('DOMContentLoaded', function() {
             resultadosClientes.classList.add('hidden');
         }
     });
-}); 
+});
+
+// Función para cerrar sesión
+function cerrarSesion() {
+    // Eliminar datos del empleado del localStorage
+    localStorage.removeItem('empleadoData');
+    
+    // Redirigir al index
+    window.location.href = '/frontend/html/index.html';
+} 

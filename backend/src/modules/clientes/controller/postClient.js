@@ -1,11 +1,12 @@
 import  {Cliente}  from '../../../conection.js';
 
-export const newCliente = async (nombre, email, telefono) => {
+export const newCliente = async (nombre, dni, telefono, direccion) => {
   try {
     const nuevocliente = await Cliente.create({ 
-      nombre, 
-      email, 
+      nombre: nombre.toLowerCase(),
+      dni,
       telefono,
+      direccion,
       status: true 
     });
     return nuevocliente;

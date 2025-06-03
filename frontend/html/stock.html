@@ -12,6 +12,7 @@
         :root {
             --primary: #3b82f6;
             --primary-dark: #2563eb;
+            --input-currency-color: #64748b;
         }
 
         /* Modo claro (default) */
@@ -21,6 +22,7 @@
             --text-primary: #1e293b;
             --text-secondary: #64748b;
             --border-color: #e2e8f0;
+            --input-currency-color: #64748b;
         }
 
         /* Modo oscuro */
@@ -32,6 +34,7 @@
             --border-color: #334155;
             --tw-bg-opacity: 1;
             background-color: var(--bg-main);
+            --input-currency-color: #94a3b8;
         }
 
         /* Aplicar variables */
@@ -430,6 +433,21 @@
         .dark #productsTableBody tr td:nth-child(3) button {
             color: #ffffff !important;
         }
+
+        /* Estilos para el signo de moneda */
+        .input-currency-symbol {
+            color: var(--input-currency-color);
+            user-select: none;
+            transition: color 0.3s ease;
+        }
+
+        .dark .input-currency-symbol {
+            color: var(--input-currency-color);
+        }
+
+        .input-with-currency {
+            padding-left: 1.75rem !important;
+        }
     </style>
 </head>
 <body class="min-h-screen theme-transition">
@@ -467,6 +485,15 @@
                         <i data-lucide="sun" class="w-5 h-5 sun-icon"></i>
                         <i data-lucide="moon" class="w-5 h-5 moon-icon hidden"></i>
                     </button>
+                    <!-- Botón de cerrar sesión -->
+                    <button 
+                        onclick="cerrarSesion()"
+                        class="flex items-center gap-2 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base"
+                        title="Cerrar sesión"
+                    >
+                        <i data-lucide="log-out" class="w-[18px] h-[18px]"></i>
+                        <span class="hidden md:inline">SALIR</span>
+                    </button>
                 </nav>
             </div>
         </div>
@@ -498,65 +525,49 @@
 
         <!-- New Product Form -->
         <div id="newProductForm" class="card mb-6 hidden">
-            <h2 class="text-xl font-bold mb-4 text-gray-800">Nuevo Producto</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input 
-                    type="text" 
-                    placeholder="Nombre del producto" 
-                    class="input-field"
-                    required
-                >
-                <input 
-                    type="text" 
-                    placeholder="Código" 
-                    class="input-field"
-                    required
-                >
-                <input 
-                    type="number" 
-                    placeholder="Precio" 
-                    class="input-field"
-                    required
-                    min="0"
-                    step="0.01"
-                >
-                <input 
-                    type="number" 
-                    placeholder="Stock inicial" 
-                    class="input-field"
-                    required
-                    min="0"
-                >
-                <input 
-                    type="text" 
-                    placeholder="Categoría" 
-                    class="input-field"
-                    required
-                >
-                <input 
-                    type="text" 
-                    placeholder="Proveedor" 
-                    class="input-field"
-                >
-                <textarea 
-                    placeholder="Descripción" 
-                    class="input-field md:col-span-2"
-                    rows="2"
-                ></textarea>
-            </div>
-            <div class="flex justify-end mt-4 space-x-2">
-                <button 
-                    onclick="toggleNewProduct()"
-                    class="px-4 py-2 border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition-all"
-                >
-                    Cancelar
-                </button>
-                <button 
-                    onclick="guardarProducto()"
-                    class="btn-primary"
-                >
-                    Guardar
-                </button>
+            <div class="form-section">
+                <div class="form-section-title">
+                    <i data-lucide="package" class="w-5 h-5 text-primary"></i>
+                    <h2 class="text-xl font-bold text-gray-800">Información del Producto</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="input-group">
+                        <label class="input-label required-field">Marca</label>
+                        <input type="text" class="input-field" required placeholder="Marca">
+                        <span class="input-hint">Marca del producto</span>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label required-field">Nombre del producto</label>
+                        <input type="text" class="input-field" required placeholder="Nombre del producto">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label required-field">Precio</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 input-currency-symbol pointer-events-none">$</span>
+                            <input type="number" class="input-field input-with-currency" required min="0" step="0.01" placeholder="0.00">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label required-field">Stock inicial</label>
+                        <input type="number" class="input-field" required min="0" placeholder="0">
+                    </div>
+                    <div class="input-group md:col-span-2">
+                        <label class="input-label">Descripción</label>
+                        <textarea class="input-field" rows="3" placeholder="Descripción del producto" maxlength="200"></textarea>
+                        <span class="input-hint">Máximo 200 caracteres</span>
+                    </div>
+                    <div class="md:col-span-2 flex justify-end space-x-3">
+                        <button type="button" onclick="toggleNewProduct()" 
+                            class="btn-secondary flex items-center gap-2 hover:scale-105 transform transition-all duration-200 group">
+                            <i data-lucide="x-circle" class="w-5 h-5 text-gray-600 group-hover:text-red-500 transition-colors"></i>
+                            <span class="group-hover:text-red-500 transition-colors">Cancelar</span>
+                        </button>
+                        <button type="button" onclick="guardarProducto()" class="btn-primary flex items-center gap-2">
+                            <i data-lucide="save" class="w-4 h-4"></i>
+                            Guardar Producto
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -570,7 +581,7 @@
                                 Producto
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Categoría
+                                Marca
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Stock
@@ -593,7 +604,7 @@
                                 <div class="text-sm text-gray-500">Sin descripción</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                Scrubbers
+                                Mr Clean
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="stock-value">10</span>
@@ -654,7 +665,7 @@
 
     <!-- Modal de Edición -->
     <div id="editModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-[400px] transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-[600px] transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
             <div class="relative">
                 <!-- Header con diseño mejorado -->
                 <div class="bg-gradient-to-r from-primary to-primary-dark p-4 rounded-t-xl">
@@ -671,83 +682,90 @@
 
                 <!-- Contenido del formulario -->
                 <div class="p-6">
-                    <div class="space-y-4">
-                        <!-- Nombre del producto con icono -->
-                        <div class="space-y-1.5">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
-                                <i data-lucide="tag" class="w-4 h-4 text-primary dark:text-blue-400"></i>
-                                Nombre
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Marca -->
+                        <div class="input-group">
+                            <label class="input-label required-field flex items-center gap-1.5">
+                                <i data-lucide="tag" class="w-4 h-4 text-primary"></i>
+                                Marca
+                            </label>
+                            <input type="text" id="editBrand" 
+                                class="input-field"
+                                required>
+                            <span class="input-hint">Marca del producto</span>
+                        </div>
+
+                        <!-- Nombre -->
+                        <div class="input-group">
+                            <label class="input-label required-field flex items-center gap-1.5">
+                                <i data-lucide="box" class="w-4 h-4 text-primary"></i>
+                                Nombre del producto
                             </label>
                             <input type="text" id="editName" 
-                                class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700/50 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-shadow hover:bg-gray-50 dark:hover:bg-gray-700">
+                                class="input-field"
+                                required>
                         </div>
 
-                        <!-- Categoría con icono -->
-                        <div class="space-y-1.5">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
-                                <i data-lucide="folder" class="w-4 h-4 text-primary dark:text-blue-400"></i>
-                                Categoría
+                        <!-- Precio -->
+                        <div class="input-group">
+                            <label class="input-label required-field flex items-center gap-1.5">
+                                <i data-lucide="dollar-sign" class="w-4 h-4 text-primary"></i>
+                                Precio
                             </label>
-                            <input type="text" id="editCategory" 
-                                class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700/50 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-shadow hover:bg-gray-50 dark:hover:bg-gray-700">
-                        </div>
-
-                        <!-- Contenedor flex para Stock y Precio -->
-                        <div class="flex gap-4">
-                            <!-- Stock con diseño mejorado -->
-                            <div class="flex-1 space-y-1.5">
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
-                                    <i data-lucide="boxes" class="w-4 h-4 text-primary dark:text-blue-400"></i>
-                                    Stock
-                                </label>
-                                <div class="flex items-center bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-300 dark:border-gray-600 hover:border-primary/50 dark:hover:border-blue-400/50 transition-colors">
-                                    <button onclick="adjustModalStock(-1)" class="p-1.5 text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
-                                        <i data-lucide="minus-circle" class="w-4 h-4"></i>
-                                    </button>
-                                    <input type="number" id="editStock" class="w-full text-center bg-transparent border-0 focus:ring-0 text-sm" min="0">
-                                    <button onclick="adjustModalStock(1)" class="p-1.5 text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
-                                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Precio con diseño mejorado -->
-                            <div class="flex-1 space-y-1.5">
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
-                                    <i data-lucide="tag" class="w-4 h-4 text-primary dark:text-blue-400"></i>
-                                    Precio
-                                </label>
-                                <div class="flex items-center">
-                                    <span class="text-gray-700 dark:text-gray-300 text-sm font-medium mr-1">$</span>
-                                    <input type="number" id="editPrice" 
-                                        class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700/50 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-shadow hover:bg-gray-50 dark:hover:bg-gray-700" 
-                                        min="0" step="0.01">
-                                </div>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 input-currency-symbol pointer-events-none">$</span>
+                                <input type="number" id="editPrice" 
+                                    class="input-field input-with-currency"
+                                    required 
+                                    min="0" 
+                                    step="0.01">
                             </div>
                         </div>
 
-                        <!-- Descripción con icono -->
-                        <div class="space-y-1.5">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
-                                <i data-lucide="align-left" class="w-4 h-4 text-primary dark:text-blue-400"></i>
+                        <!-- Stock -->
+                        <div class="input-group">
+                            <label class="input-label required-field flex items-center gap-1.5">
+                                <i data-lucide="boxes" class="w-4 h-4 text-primary"></i>
+                                Stock
+                            </label>
+                            <div class="flex items-center bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-300 dark:border-gray-600 hover:border-primary/50 dark:hover:border-blue-400/50 transition-colors">
+                                <button onclick="adjustModalStock(-1)" class="p-2 text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
+                                    <i data-lucide="minus-circle" class="w-4 h-4"></i>
+                                </button>
+                                <input type="number" id="editStock" 
+                                    class="w-full text-center bg-transparent border-0 focus:ring-0 text-sm" 
+                                    min="0"
+                                    required>
+                                <button onclick="adjustModalStock(1)" class="p-2 text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
+                                    <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Descripción -->
+                        <div class="input-group md:col-span-2">
+                            <label class="input-label flex items-center gap-1.5">
+                                <i data-lucide="align-left" class="w-4 h-4 text-primary"></i>
                                 Descripción
                             </label>
-                            <textarea id="editDescription" rows="2" 
-                                class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700/50 dark:text-white focus:border-primary focus:ring-primary/20 resize-none text-sm transition-shadow hover:bg-gray-50 dark:hover:bg-gray-700"></textarea>
+                            <textarea id="editDescription" 
+                                class="input-field" 
+                                rows="3"
+                                placeholder="Descripción del producto"></textarea>
                         </div>
                     </div>
                 </div>
 
-                <!-- Footer con botones mejorados -->
-                <div class="border-t border-gray-200 dark:border-gray-700 p-4 flex justify-end gap-2 bg-gray-50 dark:bg-gray-800/50 rounded-b-xl">
+                <!-- Footer con botones -->
+                <div class="border-t border-gray-200 dark:border-gray-700 p-4 flex justify-end gap-3 bg-gray-50 dark:bg-gray-800/50 rounded-b-xl">
                     <button onclick="cerrarModal()" 
-                        class="px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 text-sm flex items-center gap-1.5 border border-gray-300 dark:border-gray-600">
+                        class="btn-secondary flex items-center gap-2">
                         <i data-lucide="x" class="w-4 h-4"></i>
                         Cancelar
                     </button>
                     <button onclick="guardarCambios()" 
-                        class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-all duration-200 text-sm flex items-center gap-1.5 shadow-lg shadow-primary/25">
-                        <i data-lucide="check" class="w-4 h-4"></i>
+                        class="btn-primary flex items-center gap-2">
+                        <i data-lucide="save" class="w-4 h-4"></i>
                         Guardar Cambios
                     </button>
                 </div>

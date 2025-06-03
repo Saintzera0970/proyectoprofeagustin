@@ -24,12 +24,12 @@ export default (sequelize)=>{
         description:{
             type:DataTypes.STRING,
         },
-        clienteId:{
-            type:DataTypes.INTEGER,
-        },
-        empleadoId:{
-            type:DataTypes.INTEGER,
-        },
+        // clienteId:{
+        //     type:DataTypes.INTEGER,
+        // },
+        // empleadoId:{
+        //     type:DataTypes.INTEGER,
+        // },
     },{
         sequelize: sequelize,
         modelName: 'ventas', 

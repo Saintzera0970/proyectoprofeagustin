@@ -5,8 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Gestión - Altas</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="../dist/output.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+          },
+        },
+      }
+    </script>
     <style>
         /* Estilos base */
         :root {
@@ -348,6 +360,31 @@
 
         ::-webkit-scrollbar-thumb:hover {
             background: var(--text-tertiary);
+        }
+
+        /* Header - Asegurar colores */
+        header.bg-gradient-to-r {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark)) !important;
+        }
+
+        header button {
+            color: white !important;
+        }
+
+        header span {
+            color: white !important;
+        }
+
+        header .bg-white\/10 {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        header button:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .dark header.bg-gradient-to-r {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark)) !important;
         }
     </style>
 </head>

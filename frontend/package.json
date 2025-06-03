@@ -1,11 +1,5 @@
 {
   "name": "sistema-gestion",
   "version": "1.0.0",
-  "description": "Sistema de Gestión con Tailwind CSS",
-  "scripts": {
-    "build": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch"
-  },
-  "devDependencies": {
-    "tailwindcss": "^3.4.1"
-  }
+  "description": "Sistema de Gestión"
 } 

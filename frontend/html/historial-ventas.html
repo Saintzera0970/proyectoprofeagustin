@@ -5,31 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Gestión - Historial de Ventas</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="../dist/output.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+          },
+        },
+      }
+    </script>
     <style>
         /* Estilos base */
         :root {
             --primary: #3b82f6;
             --primary-dark: #2563eb;
+            --primary-light: #60a5fa;
+            --primary-lighter: #93c5fd;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #3b82f6;
         }
 
         /* Modo claro (default) */
         .light {
             --bg-main: #f8fafc;
             --bg-card: #ffffff;
+            --bg-hover: #f1f5f9;
+            --bg-active: #e2e8f0;
             --text-primary: #1e293b;
             --text-secondary: #64748b;
+            --text-tertiary: #94a3b8;
             --border-color: #e2e8f0;
+            --input-bg: #ffffff;
+            --input-border: #e2e8f0;
+            --input-text: #1e293b;
+            --input-placeholder: #94a3b8;
+            --input-focus-border: #3b82f6;
+            --input-focus-shadow: rgba(59, 130, 246, 0.1);
+            --link-color: #3b82f6;
+            --button-hover: #f1f5f9;
         }
 
         /* Modo oscuro */
         .dark {
-            --bg-main: #1a1a2e;
-            --bg-card: #1f1f3d;
-            --text-primary: #ffffff;
-            --text-secondary: #a0aec0;
-            --border-color: #2d2d4d;
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --bg-hover: #1e293b;
+            --bg-active: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-tertiary: #94a3b8;
+            --border-color: #334155;
+            --input-bg: #1e293b;
+            --input-border: #334155;
+            --input-text: #f8fafc;
+            --input-placeholder: #64748b;
+            --input-focus-border: #3b82f6;
+            --input-focus-shadow: rgba(59, 130, 246, 0.2);
+            --link-color: #60a5fa;
+            --button-hover: #334155;
+            --tw-bg-opacity: 1;
+            background-color: var(--bg-main);
+            --header-from: #2563eb;
+            --header-to: #1d4ed8;
         }
 
         /* Aplicar variables */
@@ -37,6 +81,158 @@
             background-color: var(--bg-main);
             color: var(--text-primary);
             transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Textos en modo oscuro */
+        .dark .text-gray-400,
+        .dark .text-gray-500,
+        .dark .text-gray-600,
+        .dark .text-gray-700,
+        .dark .text-gray-800,
+        .dark .text-gray-900,
+        .dark h1,
+        .dark h2,
+        .dark h3,
+        .dark p,
+        .dark label,
+        .dark span {
+            color: #ffffff !important;
+        }
+
+        /* Tarjetas y contenedores */
+        .dark .bg-white {
+            background-color: var(--bg-card) !important;
+        }
+
+        .dark .border-gray-200 {
+            border-color: var(--border-color) !important;
+        }
+
+        /* Campos de entrada */
+        .dark input,
+        .dark select {
+            background-color: var(--input-bg) !important;
+            border-color: var(--border-color) !important;
+            color: var(--input-text) !important;
+        }
+
+        .dark input::placeholder,
+        .dark select::placeholder {
+            color: var(--input-placeholder) !important;
+        }
+
+        /* Tabla */
+        .dark table {
+            border-color: var(--border-color) !important;
+        }
+
+        .dark table thead {
+            background-color: var(--bg-card) !important;
+        }
+
+        .dark table thead th {
+            color: var(--text-secondary) !important;
+            border-bottom-color: var(--border-color) !important;
+        }
+
+        .dark table tbody tr {
+            border-color: var(--border-color) !important;
+        }
+
+        .dark table tbody tr:hover {
+            background-color: var(--bg-hover) !important;
+        }
+
+        .dark table td {
+            color: var(--text-primary) !important;
+        }
+
+        /* Botones */
+        .dark .btn-primary {
+            background-color: var(--link-color);
+            color: #ffffff !important;
+        }
+
+        .dark .btn-secondary {
+            background-color: var(--input-bg);
+            color: #ffffff !important;
+            border: 1px solid var(--border-color);
+        }
+
+        .dark .btn-secondary:hover {
+            background-color: var(--button-hover);
+        }
+
+        /* Modal */
+        .dark #modalDetalles .bg-white {
+            background-color: var(--bg-card) !important;
+        }
+
+        /* Animaciones */
+        .theme-transition {
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Scrollbar personalizada */
+        .dark ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .dark ::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-tertiary);
+        }
+
+        /* Efectos hover */
+        .dark .hover\:bg-gray-50:hover {
+            background-color: var(--hover-bg) !important;
+        }
+
+        .dark .hover\:text-gray-700:hover {
+            color: var(--text-primary) !important;
+        }
+
+        /* Header en modo oscuro - Asegurar colores */
+        .dark header.bg-gradient-to-r {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark)) !important;
+        }
+
+        .dark header button:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .dark header .bg-white\/10 {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* Header - Asegurar colores */
+        header.bg-gradient-to-r {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark)) !important;
+        }
+
+        header button {
+            color: white !important;
+        }
+
+        header span {
+            color: white !important;
+        }
+
+        header .bg-white\/10 {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        header button:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
         }
     </style>
 </head>
@@ -65,6 +261,24 @@
                     <button onclick="window.location.href='altas.html'" class="flex items-center gap-2 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base">
                         <i data-lucide="user-plus" class="w-[18px] h-[18px]"></i>
                         <span class="hidden md:inline">ALTAS</span>
+                    </button>
+                    <!-- Botón de tema -->
+                    <button 
+                        onclick="toggleTheme()"
+                        class="theme-icon flex items-center justify-center w-10 h-10 rounded-full hover:bg-white/10 transition-all"
+                        title="Cambiar tema"
+                    >
+                        <i data-lucide="sun" class="w-5 h-5 sun-icon"></i>
+                        <i data-lucide="moon" class="w-5 h-5 moon-icon hidden"></i>
+                    </button>
+                    <!-- Botón de cerrar sesión -->
+                    <button 
+                        onclick="cerrarSesion()"
+                        class="flex items-center gap-2 hover:bg-white/10 px-4 py-2 rounded-lg transition-all text-sm md:text-base"
+                        title="Cerrar sesión"
+                    >
+                        <i data-lucide="log-out" class="w-[18px] h-[18px]"></i>
+                        <span class="hidden md:inline">SALIR</span>
                     </button>
                 </nav>
             </div>
@@ -186,6 +400,7 @@
         </div>
     </div>
 
+    <script src="../js/theme.js"></script>
     <script src="../js/historial-ventas.js"></script>
     <script>
         // Inicializar los íconos de Lucide

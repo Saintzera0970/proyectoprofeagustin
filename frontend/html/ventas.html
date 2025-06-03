@@ -5,33 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Gestión - Ventas</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="../dist/output.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+          },
+        },
+      }
+    </script>
     <style>
         /* Estilos base */
         :root {
             --primary: #3b82f6;
             --primary-dark: #2563eb;
+            --primary-light: #60a5fa;
+            --primary-lighter: #93c5fd;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #3b82f6;
         }
 
         /* Modo claro (default) */
         .light {
             --bg-main: #f8fafc;
             --bg-card: #ffffff;
+            --bg-hover: #f1f5f9;
+            --bg-active: #e2e8f0;
             --text-primary: #1e293b;
             --text-secondary: #64748b;
+            --text-tertiary: #94a3b8;
             --border-color: #e2e8f0;
+            --input-bg: #ffffff;
+            --input-border: #e2e8f0;
+            --input-text: #1e293b;
+            --input-placeholder: #94a3b8;
+            --input-focus-border: #3b82f6;
+            --input-focus-shadow: rgba(59, 130, 246, 0.1);
+            --link-color: #3b82f6;
+            --button-hover: #f1f5f9;
         }
 
         /* Modo oscuro */
         .dark {
-            --tw-bg-opacity: 1;
-            background-color: var(--bg-main);
             --bg-main: #0f172a;
             --bg-card: #1e293b;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
+            --bg-hover: #1e293b;
+            --bg-active: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-tertiary: #94a3b8;
             --border-color: #334155;
+            --input-bg: #1e293b;
+            --input-border: #334155;
+            --input-text: #f8fafc;
+            --input-placeholder: #64748b;
+            --input-focus-border: #3b82f6;
+            --input-focus-shadow: rgba(59, 130, 246, 0.2);
+            --link-color: #60a5fa;
+            --button-hover: #334155;
+            --tw-bg-opacity: 1;
+            background-color: var(--bg-main);
+            --header-from: #2563eb;
+            --header-to: #1d4ed8;
         }
 
         /* Textos en modo oscuro */
@@ -201,123 +243,82 @@
             background: var(--text-tertiary);
         }
 
-        /* Aplicar variables */
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-primary);
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .card {
-            background-color: var(--bg-card) !important;
-            border-color: var(--border-color) !important;
-        }
-
-        .input-field {
-            background-color: var(--bg-main) !important;
-            border-color: var(--border-color) !important;
-            color: var(--text-primary) !important;
-        }
-
-        table thead {
-            background-color: var(--bg-main) !important;
-            color: var(--text-secondary) !important;
-        }
-
-        table tbody {
-            background-color: var(--bg-card) !important;
-            color: var(--text-primary) !important;
-        }
-
-        table tr {
-            border-color: var(--border-color) !important;
-        }
-
-        .dark .btn-secondary {
-            @apply border-gray-600 text-gray-300 hover:bg-gray-700;
-        }
-
-        .dark .bg-white {
-            background-color: var(--bg-card) !important;
-        }
-
-        .card {
-            @apply bg-white rounded-xl shadow-sm p-6 transition-all duration-300;
-        }
-        .input-field {
-            @apply w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-200;
-        }
-        .btn-primary {
-            @apply bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark transition-all duration-200 focus:ring-2 focus:ring-primary/20;
-        }
-        .btn-secondary {
-            @apply bg-white text-gray-700 px-6 py-2 rounded-lg border-2 border-gray-200 hover:bg-gray-50 transition-all duration-200 focus:ring-2 focus:ring-gray-200;
-        }
-        .animate-fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        /* Estilos específicos de ventas */
         .product-item {
             @apply hover:bg-gray-50 transition-all duration-200;
         }
+
         .payment-method {
             @apply flex items-center space-x-3 p-4 rounded-lg border-2 border-transparent transition-all duration-200 cursor-pointer;
             position: relative;
         }
+
         .payment-method:hover {
             @apply border-primary/20;
             background: rgba(59, 130, 246, 0.05);
         }
+
         .payment-method.selected {
             @apply border-primary;
         }
+
         .payment-method[onclick*="efectivo"] i {
             color: #22c55e !important;
         }
+
         .dark .payment-method[onclick*="efectivo"] {
             background: linear-gradient(45deg, rgba(34, 197, 94, 0.1), transparent);
         }
+
         .dark .payment-method[onclick*="efectivo"].selected {
             border-color: #22c55e !important;
             background: linear-gradient(45deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.05));
         }
+
         .dark .payment-method[onclick*="efectivo"]:hover {
             background: linear-gradient(45deg, rgba(34, 197, 94, 0.15), transparent);
         }
+
         .payment-method[onclick*="transferencia"] i {
             color: #6366f1 !important;
         }
+
         .dark .payment-method[onclick*="transferencia"] {
             background: linear-gradient(45deg, rgba(99, 102, 241, 0.1), transparent);
         }
+
         .dark .payment-method[onclick*="transferencia"].selected {
             border-color: #6366f1 !important;
             background: linear-gradient(45deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.05));
         }
+
         .dark .payment-method[onclick*="transferencia"]:hover {
             background: linear-gradient(45deg, rgba(99, 102, 241, 0.15), transparent);
         }
+
         .dark .payment-method span {
             font-weight: 500;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
+
         .dark .payment-method[onclick*="efectivo"] span {
             color: #4ade80 !important;
         }
+
         .dark .payment-method[onclick*="transferencia"] span {
             color: #818cf8 !important;
         }
+
         .dark #efectivo_fields {
             background-color: rgba(34, 197, 94, 0.1) !important;
             border: 1px solid rgba(34, 197, 94, 0.2) !important;
         }
+
         .dark #transferencia_fields {
             background-color: rgba(99, 102, 241, 0.1) !important;
             border: 1px solid rgba(99, 102, 241, 0.2) !important;
         }
+
         /* Estilo para la barra de scroll */
         .scrollbar-thin::-webkit-scrollbar {
             width: 6px;
@@ -343,13 +344,42 @@
             border: 1px solid rgba(99, 102, 241, 0.2) !important;
         }
 
-        .dark #transferencia_fields .text-gray-700,
-        .dark #transferencia_fields .text-gray-600 {
-            color: rgba(255, 255, 255, 0.9) !important;
+        /* Header en modo oscuro - Asegurar colores */
+        .dark header.bg-gradient-to-r {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark)) !important;
         }
 
-        .dark #transferencia_fields .font-medium {
-            color: #818cf8 !important;
+        .dark header button:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .dark header .bg-white\/10 {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* Header - Asegurar colores */
+        header.bg-gradient-to-r {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark)) !important;
+        }
+
+        header button {
+            color: white !important;
+        }
+
+        header span {
+            color: white !important;
+        }
+
+        header .bg-white\/10 {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        header button:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .dark header.bg-gradient-to-r {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark)) !important;
         }
     </style>
 </head>
@@ -715,7 +745,7 @@
 
                 <!-- Botones de Acción -->
                 <div class="space-y-3 animate-fade-in" style="animation-delay: 0.4s">
-                    <button class="btn-primary w-full h-12 flex items-center justify-center gap-2 group" id="finalizarVentaBtn">
+                    <button class="w-full h-12 flex items-center justify-center gap-2 group bg-primary hover:bg-primary-dark text-white rounded-lg transition-all duration-200 transform hover:-translate-y-0.5" id="finalizarVentaBtn">
                         <i data-lucide="check-circle" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
                         Finalizar Venta
                     </button>

@@ -303,4 +303,65 @@ function cerrarSesion() {
     
     // Redirigir al index
     window.location.href = '/frontend/html/index.html';
-} 
+}
+
+// Función para guardar un nuevo producto
+async function guardarProductoAlta(e) {
+    e.preventDefault();
+    
+    try {
+        const form = e.target;
+        
+        // Obtener los valores del formulario
+        const marca = form.querySelector('input[placeholder="Marca"]').value.trim();
+        const nombre = form.querySelector('input[placeholder="Nombre del producto"]').value.trim();
+        const precio = parseFloat(form.querySelector('input[type="number"][step="0.01"]').value);
+        const stock = parseInt(form.querySelector('input[type="number"]:not([step])').value);
+        const descripcion = form.querySelector('textarea').value.trim();
+
+        // Validar campos requeridos
+        if (!marca || !nombre || isNaN(precio) || precio <= 0 || isNaN(stock) || stock < 0) {
+            throw new Error('Por favor complete todos los campos requeridos correctamente');
+        }
+
+        const productoData = {
+            brand: marca,
+            name: nombre,
+            price: precio,
+            stock: stock,
+            description: descripcion || null // Si no hay descripción, enviar null
+        };
+
+        // Enviar datos al servidor
+        const response = await fetch('https://back-prof-agustin-2.onrender.com/productos', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(productoData)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Error al guardar el producto');
+        }
+
+        // Limpiar formulario
+        form.reset();
+        
+        // Mostrar mensaje de éxito
+        mostrarNotificacion('Éxito', 'Producto guardado correctamente', 'success');
+    } catch (error) {
+        console.error('Error:', error);
+        mostrarNotificacion('Error', error.message, 'error');
+    }
+}
+
+// Agregar event listeners cuando el DOM esté cargado
+document.addEventListener('DOMContentLoaded', () => {
+    // Obtener el formulario de productos
+    const formProductos = document.querySelector('#productos form');
+    if (formProductos) {
+        formProductos.addEventListener('submit', guardarProductoAlta);
+    }
+}); 

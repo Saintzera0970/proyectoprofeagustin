@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Redirigir después de un breve delay
                 setTimeout(() => {
-                    window.location.href = 'home.html';
+                    window.location.href = 'frontend/html/home.html';
                 }, 1000);
             } else {
                 showError(result.error);
@@ -153,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Verificar si ya hay una sesión activa
     // if (localStorage.getItem('isLoggedIn') === 'true') {
-    //     window.location.href = 'home.html';
+    //     window.location.href = 'frontend/html/home.html';
     // }
 
     // Focus inicial en el campo de usuario

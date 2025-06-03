@@ -5,8 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Gestión - Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="../dist/output.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+          },
+        },
+      }
+    </script>
     <style>
         /* Estilos base */
         :root {
@@ -360,7 +372,6 @@
         <div id="success-message" class="hidden"></div>
     </div>
 
-    <script src="../js/theme.js"></script>
-    <script src="../js/index.js"></script>
+    <script src="index.js"></script>
   </body>
 </html> 

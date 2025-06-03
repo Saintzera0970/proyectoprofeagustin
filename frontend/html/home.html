@@ -5,41 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Gestión - Home</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="../dist/output.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+          },
+        },
+      }
+    </script>
     <style>
         /* Estilos base */
         :root {
             --primary: #3b82f6;
             --primary-dark: #2563eb;
+            --primary-light: #60a5fa;
+            --primary-lighter: #93c5fd;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #3b82f6;
         }
 
         /* Modo claro (default) */
         .light {
             --bg-main: #f8fafc;
             --bg-card: #ffffff;
+            --bg-hover: #f1f5f9;
+            --bg-active: #e2e8f0;
             --text-primary: #1e293b;
             --text-secondary: #64748b;
+            --text-tertiary: #94a3b8;
             --border-color: #e2e8f0;
+            --input-bg: #ffffff;
+            --input-border: #e2e8f0;
+            --input-text: #1e293b;
+            --input-placeholder: #94a3b8;
+            --input-focus-border: #3b82f6;
+            --input-focus-shadow: rgba(59, 130, 246, 0.1);
+            --link-color: #3b82f6;
+            --button-hover: #f1f5f9;
         }
 
         /* Modo oscuro */
         .dark {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --bg-hover: #1e293b;
+            --bg-active: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-tertiary: #94a3b8;
+            --border-color: #334155;
+            --input-bg: #1e293b;
+            --input-border: #334155;
+            --input-text: #f8fafc;
+            --input-placeholder: #64748b;
+            --input-focus-border: #3b82f6;
+            --input-focus-shadow: rgba(59, 130, 246, 0.2);
+            --link-color: #60a5fa;
+            --button-hover: #334155;
             --tw-bg-opacity: 1;
-            --bg-main: #1a1a2e;
-            --bg-card: #1f1f3d;
-            --text-primary: #ffffff;
-            --text-secondary: #a0aec0;
-            --border-color: #2d2d4d;
+            background-color: var(--bg-main);
             --hover-bg: #2a2a4a;
             --success-text: #4ade80;
             --warning-text: #fbbf24;
             --error-text: #ef4444;
-            --link-color: #3b82f6;
-            --button-hover: #374151;
-            --input-bg: #2d2d4d;
-            --text-tertiary: #718096;
-            background-color: var(--bg-main);
+            --header-from: #2563eb;
+            --header-to: #1d4ed8;
         }
 
         /* Textos en modo oscuro - Reglas específicas */
@@ -351,22 +389,17 @@
             background-color: rgba(251, 191, 36, 0.2);
         }
 
-        .dark .w-10.h-10.bg-green-100 {
-            background-color: rgba(74, 222, 128, 0.2);
+        /* Header en modo oscuro - Asegurar colores */
+        .dark header.bg-gradient-to-r {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark)) !important;
         }
 
-        .dark .w-10.h-10.bg-blue-100 {
-            background-color: rgba(59, 130, 246, 0.2);
+        .dark header button:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
         }
 
-        /* Header en modo oscuro */
-        .dark .bg-gradient-to-r.from-primary.to-primary-dark {
-            background: linear-gradient(to right, #2563eb, #1d4ed8);
-        }
-
-        /* Botones en modo oscuro */
-        .dark .hover\:bg-white\/10:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+        .dark header .bg-white\/10 {
+            background-color: rgba(255, 255, 255, 0.1) !important;
         }
 
         /* Animaciones en modo oscuro */
@@ -377,6 +410,31 @@
 
         .animate-fade-in {
             animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        /* Header - Asegurar colores */
+        header.bg-gradient-to-r {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark)) !important;
+        }
+
+        header button {
+            color: white !important;
+        }
+
+        header span {
+            color: white !important;
+        }
+
+        header .bg-white\/10 {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        header button:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .dark header.bg-gradient-to-r {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark)) !important;
         }
     </style>
 </head>

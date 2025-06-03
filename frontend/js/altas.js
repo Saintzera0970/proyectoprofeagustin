@@ -86,7 +86,7 @@ function togglePassword(button) {
 
 // Validar formularios antes de enviar
 document.querySelectorAll('form').forEach(form => {
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
         // Validar campos requeridos
@@ -110,24 +110,74 @@ document.querySelectorAll('form').forEach(form => {
         });
         
         if (isValid) {
-            // Aquí iría la lógica para enviar el formulario
-            console.log('Formulario válido, enviando datos...');
-            form.reset();
-            
-            // Mostrar mensaje de éxito
-            const successMessage = document.createElement('div');
-            successMessage.className = 'fixed bottom-4 right-4 bg-green-50 text-green-800 px-4 py-3 rounded-lg shadow-lg flex items-center gap-2';
-            successMessage.innerHTML = `
-                <i data-lucide="check-circle" class="w-5 h-5"></i>
-                <span>Datos guardados correctamente</span>
-            `;
-            document.body.appendChild(successMessage);
-            lucide.createIcons();
-            
-            // Eliminar mensaje después de 3 segundos
-            setTimeout(() => {
-                successMessage.remove();
-            }, 3000);
+            try {
+                // Verificar si es el formulario de productos
+                if (form.closest('#productos')) {
+                    // Obtener los valores del formulario
+                    const marca = form.querySelector('input[placeholder="Marca"]').value;
+                    const nombre = form.querySelector('input[placeholder="Nombre del producto"]').value;
+                    const precio = parseFloat(form.querySelector('input[type="number"][min="0"][step="0.01"]').value);
+                    const stock = parseInt(form.querySelector('input[type="number"][min="0"]:not([step])').value);
+                    const descripcion = form.querySelector('textarea').value;
+
+                    // Crear objeto con los datos del producto
+                    const productoData = {
+                        brand: marca,
+                        name: nombre,
+                        price: precio,
+                        stock: stock,
+                        description: descripcion || null // Si no hay descripción, enviar null
+                    };
+
+                    // Enviar datos al servidor
+                    const response = await fetch('http://localhost:1000/productos', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(productoData)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Error al guardar el producto');
+                    }
+
+                    // Limpiar formulario
+                    form.reset();
+                    
+                    // Mostrar mensaje de éxito
+                    const successMessage = document.createElement('div');
+                    successMessage.className = 'fixed bottom-4 right-4 bg-green-50 text-green-800 px-4 py-3 rounded-lg shadow-lg flex items-center gap-2';
+                    successMessage.innerHTML = `
+                        <i data-lucide="check-circle" class="w-5 h-5"></i>
+                        <span>Producto guardado correctamente</span>
+                    `;
+                    document.body.appendChild(successMessage);
+                    lucide.createIcons();
+                    
+                    // Eliminar mensaje después de 3 segundos
+                    setTimeout(() => {
+                        successMessage.remove();
+                    }, 3000);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                
+                // Mostrar mensaje de error
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'fixed bottom-4 right-4 bg-red-50 text-red-800 px-4 py-3 rounded-lg shadow-lg flex items-center gap-2';
+                errorMessage.innerHTML = `
+                    <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                    <span>Error al guardar el producto</span>
+                `;
+                document.body.appendChild(errorMessage);
+                lucide.createIcons();
+                
+                // Eliminar mensaje después de 3 segundos
+                setTimeout(() => {
+                    errorMessage.remove();
+                }, 3000);
+            }
         }
     });
     

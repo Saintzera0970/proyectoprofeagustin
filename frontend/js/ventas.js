@@ -348,80 +348,88 @@ function mostrarNotificacion(titulo, mensaje) {
     }, 3000);
 }
 
-async function buscarClientes(query) {
-    if (!query.trim()) {
-        document.getElementById('resultadosClientes').classList.add('hidden');
-        return;
-    }
-
-    try {
-        const clientes = await fetchClientes();
-        const resultados = clientes.filter(cliente => 
-            cliente.nombre.toLowerCase().includes(query.toLowerCase()) ||
-            cliente.dni.includes(query)
-        );
-
-        mostrarResultadosClientes(resultados);
-    } catch (error) {
-        console.error('Error al buscar clientes:', error);
-    }
-}
-
+// Función para mostrar los resultados de clientes
 function mostrarResultadosClientes(resultados) {
     const contenedor = document.getElementById('resultadosClientes');
-    contenedor.innerHTML = '';
-    contenedor.classList.remove('hidden');
+    
+    // Si el contenedor no existe, créalo
+    if (!contenedor) {
+        const nuevoContenedor = document.createElement('div');
+        nuevoContenedor.id = 'resultadosClientes';
+        nuevoContenedor.className = 'absolute z-50 top-full left-0 right-0 mt-2 bg-[#0f172a] rounded-xl shadow-xl border border-gray-700 max-h-[420px] overflow-y-auto hidden divide-y divide-gray-800 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-800 w-full';
+        document.querySelector('.relative input[placeholder*="cliente"]').parentElement.appendChild(nuevoContenedor);
+    }
+
+    const contenedorActual = document.getElementById('resultadosClientes');
+    contenedorActual.innerHTML = '';
+    contenedorActual.classList.remove('hidden');
 
     if (resultados.length === 0) {
-        contenedor.innerHTML = `
-            <div class="p-4 text-center text-gray-500">
+        contenedorActual.innerHTML = `
+            <div class="p-6 text-center text-gray-400">
+                <i data-lucide="search-x" class="w-6 h-6 mx-auto mb-2 text-gray-500"></i>
                 <p>No se encontraron clientes</p>
             </div>
         `;
+        lucide.createIcons();
         return;
     }
 
     resultados.forEach(cliente => {
-        const div = document.createElement('div');
-        div.className = 'p-3 hover:bg-gray-50 cursor-pointer';
-        div.innerHTML = `
-            <div class="flex items-center">
-                <div class="flex-1">
-                    <div class="text-sm font-medium text-gray-900">${cliente.nombre}</div>
-                    <div class="text-sm text-gray-500">DNI: ${cliente.dni}</div>
-                </div>
-                <div class="text-sm text-gray-600">
-                    Deuda: $${cliente.deuda.toFixed(2)}
+        const itemCliente = document.createElement('div');
+        itemCliente.className = 'p-4 hover:bg-gray-800/50 cursor-pointer transition-colors duration-150';
+        itemCliente.innerHTML = `
+            <div class="flex items-center justify-between gap-4">
+                <div class="flex items-center flex-1 min-w-0">
+                    <div class="h-10 w-10 flex-shrink-0 bg-blue-500/20 rounded-lg flex items-center justify-center mr-4">
+                        <i data-lucide="user" class="w-5 h-5 text-blue-500"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-sm font-medium text-gray-200">${cliente.nombre}</div>
+                        <div class="text-xs text-gray-400">DNI: ${cliente.dni}</div>
+                    </div>
                 </div>
             </div>
         `;
-        div.onclick = () => seleccionarCliente(cliente);
-        contenedor.appendChild(div);
+        
+        itemCliente.onclick = () => seleccionarCliente(cliente);
+        contenedorActual.appendChild(itemCliente);
     });
+
+    // Reinicializar los iconos de Lucide
+    lucide.createIcons();
 }
 
 function seleccionarCliente(cliente) {
     clienteSeleccionado = cliente;
     
-    // Mostrar información del cliente
-    document.getElementById('infoCliente').classList.remove('hidden');
-    document.getElementById('estadoCuenta').classList.remove('hidden');
-    document.getElementById('nombreCliente').textContent = cliente.nombre;
-    document.getElementById('dniCliente').textContent = `DNI: ${cliente.dni}`;
+    // Mostrar el contenedor del cliente seleccionado
+    const container = document.getElementById('clienteSeleccionadoContainer');
+    const nombreElement = document.getElementById('nombreClienteSeleccionado');
+    const dniElement = document.getElementById('dniClienteSeleccionado');
     
-    // Ocultar resultados de búsqueda
+    container.classList.remove('hidden');
+    nombreElement.textContent = `${cliente.nombre} (ID: ${cliente.id})`;
+    dniElement.textContent = `DNI: ${cliente.dni}`;
+    
+    // Limpiar y ocultar el input de búsqueda
+    const inputBusqueda = document.querySelector('input[placeholder*="cliente"]');
+    inputBusqueda.value = '';
     document.getElementById('resultadosClientes').classList.add('hidden');
     
-    // Actualizar estado de cuenta
-    actualizarEstadoCuenta();
+    // Reinicializar los iconos de Lucide
+    lucide.createIcons();
 }
 
-function limpiarClienteSeleccionado() {
+function quitarClienteSeleccionado() {
     clienteSeleccionado = null;
-    document.getElementById('infoCliente').classList.add('hidden');
-    document.getElementById('estadoCuenta').classList.add('hidden');
-    document.getElementById('errorCuentaCorriente').classList.add('hidden');
-    document.querySelector('input[placeholder="Buscar cliente..."]').value = '';
+    document.getElementById('clienteSeleccionadoContainer').classList.add('hidden');
+    
+    // Limpiar el input de búsqueda
+    const inputBusqueda = document.querySelector('input[placeholder*="cliente"]');
+    if (inputBusqueda) {
+        inputBusqueda.value = '';
+    }
 }
 
 function actualizarEstadoCuenta() {
@@ -460,21 +468,27 @@ function actualizarEstadoCuenta() {
 
 // Función para crear el objeto de venta
 function crearObjetoVenta() {
+    // Obtener el empleado del localStorage
+    const empleadoData = JSON.parse(localStorage.getItem('empleadoData'));
+    if (!empleadoData) {
+        throw new Error('No hay información del empleado. Por favor, inicie sesión nuevamente.');
+    }
+
     const metodoPago = document.querySelector('input[name="payment_method"]:checked');
     const productos = obtenerProductosVenta();
     const total = parseFloat(document.querySelector('[data-total="total"]').textContent.replace('$', '')) || 0;
     
     const venta = {
-        clientName: clienteSeleccionado ? clienteSeleccionado.nombre : "Cliente General",
+        empleadoId: empleadoData.id,
+        clienteId: clienteSeleccionado ? clienteSeleccionado.id : null,
         payMethod: metodoPago ? metodoPago.value : "efectivo",
         delivery: document.getElementById('ventaDelivery').checked,
-        totalAmount: total,
         description: document.getElementById('ventaDescripcion').value.trim(),
-        productId: productos.map(producto => ({
-            id: parseInt(document.querySelector(`tr[data-codigo]`).getAttribute('data-codigo')),
-            quantity: producto.cantidad
+        productId: productos.map(producto => ({  // Cambiamos productos por productId
+            id: parseInt(producto.id),
+            quantity: parseInt(producto.cantidad)  // Aseguramos que quantity sea un número
         }))
-    };
+};
 
     return venta;
 }
@@ -504,9 +518,9 @@ async function finalizarVenta() {
         const objetoVenta = crearObjetoVenta();
         console.log('Objeto de venta creado:', objetoVenta);
 
-        // Aquí puedes agregar la lógica para enviar el objeto de venta al servidor
+        // Enviar la venta al servidor
         try {
-            const response = await fetch('/api/ventas', {
+            const response = await fetch('http://localhost:1000/ventas', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -523,6 +537,9 @@ async function finalizarVenta() {
 
             // Limpiar el formulario
             cancelarVenta();
+            
+            // Limpiar cliente seleccionado
+            quitarClienteSeleccionado();
         } catch (error) {
             console.error('Error al enviar la venta:', error);
             mostrarNotificacion('Error', 'Error al enviar la venta al servidor');
@@ -530,7 +547,7 @@ async function finalizarVenta() {
         
     } catch (error) {
         console.error('Error al finalizar la venta:', error);
-        mostrarNotificacion('Error', 'Ocurrió un error al finalizar la venta');
+        mostrarNotificacion('Error', error.message || 'Ocurrió un error al finalizar la venta');
     }
 }
 
@@ -542,10 +559,22 @@ function obtenerTotalActual() {
 function obtenerProductosVenta() {
     const productos = [];
     document.querySelectorAll('#productList tr').forEach(tr => {
-        const nombre = tr.querySelector('.text-gray-900').textContent;
-        const cantidad = parseInt(tr.querySelector('input[type="number"]').value);
-        const precio = parseFloat(tr.querySelector('.subtotal').textContent.replace('$', ''));
-        productos.push({ nombre, cantidad, precio });
+        const id = tr.getAttribute('data-codigo');
+        const cantidadInput = tr.querySelector('input[type="number"]');
+        
+        if (!id || !cantidadInput || !cantidadInput.value) {
+            throw new Error('Datos de producto inválidos');
+        }
+        
+        const cantidad = parseInt(cantidadInput.value);
+        if (isNaN(cantidad) || cantidad <= 0) {
+            throw new Error('La cantidad debe ser un número mayor a 0');
+        }
+        
+        productos.push({ 
+            id: parseInt(id),
+            cantidad: cantidad
+        });
     });
     return productos;
 }
@@ -561,4 +590,57 @@ actualizarTotales = function() {
     if (document.querySelector('input[value="cuenta_corriente"]:checked')) {
         actualizarEstadoCuenta();
     }
-}; 
+};
+
+// Función para buscar clientes
+async function buscarClientes(query = '') {
+    try {
+        // Obtener todos los clientes
+        const response = await fetch('http://localhost:1000/clientes');
+        const clientes = await response.json();
+
+        // Si no hay consulta, mostrar todos los clientes
+        if (!query.trim()) {
+            mostrarResultadosClientes(clientes);
+            return;
+        }
+
+        // Filtrar clientes según la búsqueda
+        const queryLower = query.toLowerCase().trim();
+        const resultados = clientes.filter(cliente => 
+            cliente.nombre.toLowerCase().includes(queryLower) ||
+            cliente.dni.toLowerCase().includes(queryLower)
+        );
+
+        mostrarResultadosClientes(resultados);
+    } catch (error) {
+        console.error('Error al buscar clientes:', error);
+        mostrarNotificacion(
+            'Error',
+            'No se pudieron cargar los clientes. Por favor, intente nuevamente.',
+            'error'
+        );
+    }
+}
+
+// Agregar el event listener al input de búsqueda de clientes
+document.addEventListener('DOMContentLoaded', function() {
+    const inputCliente = document.querySelector('input[placeholder*="cliente"]');
+    if (inputCliente) {
+        // Mostrar todos los clientes al hacer foco en el input
+        inputCliente.addEventListener('focus', () => buscarClientes());
+        
+        // Filtrar clientes mientras se escribe
+        inputCliente.addEventListener('input', (e) => buscarClientes(e.target.value));
+    }
+
+    // Cerrar resultados al hacer clic fuera
+    document.addEventListener('click', (e) => {
+        const resultadosClientes = document.getElementById('resultadosClientes');
+        const inputCliente = document.querySelector('input[placeholder*="cliente"]');
+        
+        if (resultadosClientes && !resultadosClientes.contains(e.target) && e.target !== inputCliente) {
+            resultadosClientes.classList.add('hidden');
+        }
+    });
+}); 

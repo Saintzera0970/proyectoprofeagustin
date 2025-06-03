@@ -479,18 +479,40 @@
                     </h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="relative">
+                            <div class="relative">
+                                <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5"></i>
                             <input 
                                 type="text" 
                                 placeholder="Buscar cliente por nombre o DNI..." 
-                                class="input-field"
+                                    class="w-full bg-[#0f172a] text-gray-200 border border-gray-700 rounded-lg py-2 pl-10 pr-4 focus:outline-none focus:border-blue-500 text-sm"
+                                    onkeyup="buscarClientes(this.value)"
+                                    onfocus="buscarClientes()"
                             >
-                            <button class="absolute right-2 top-1/2 transform -translate-y-1/2 text-primary hover:text-primary-dark">
-                                <i data-lucide="search" class="w-5 h-5"></i>
+                            </div>
+                            <!-- Contenedor para los resultados de búsqueda -->
+                            <div id="resultadosClientes" class="absolute z-50 top-full left-0 right-0 mt-2 bg-[#0f172a] rounded-xl shadow-xl border border-gray-700 max-h-[420px] overflow-y-auto hidden divide-y divide-gray-800 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-800 w-full">
+                            </div>
+                            <!-- Cliente seleccionado -->
+                            <div id="clienteSeleccionadoContainer" class="hidden mt-3 p-3 bg-[#1e293b] rounded-lg border border-gray-700">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div class="h-10 w-10 flex-shrink-0 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                                            <i data-lucide="user" class="w-5 h-5 text-blue-500"></i>
+                                        </div>
+                                        <div>
+                                            <h4 id="nombreClienteSeleccionado" class="text-sm font-medium text-gray-200"></h4>
+                                            <p id="dniClienteSeleccionado" class="text-xs text-gray-400"></p>
+                                        </div>
+                                    </div>
+                                    <button onclick="quitarClienteSeleccionado()" class="text-gray-400 hover:text-gray-200 transition-colors">
+                                        <i data-lucide="x" class="w-5 h-5"></i>
                             </button>
+                                </div>
+                            </div>
                         </div>
                         <button 
                             onclick="window.location.href='altas.html?tab=clientes'"
-                            class="btn-primary flex items-center justify-center gap-2"
+                            class="bg-blue-500 hover:bg-blue-600 text-white rounded-lg py-2 px-4 flex items-center justify-center gap-2 transition-colors duration-150"
                         >
                             <i data-lucide="user-plus" class="w-5 h-5"></i>
                             Nuevo Cliente

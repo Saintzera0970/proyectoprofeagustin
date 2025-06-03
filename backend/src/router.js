@@ -10,4 +10,4 @@ router.use('/productos', productsRouter);
 router.use('/ventas', VentasRouter);
 router.use('/clientes',ruta)
 router.use('/empleados', rutaEmpleado); 
-//comentario
+

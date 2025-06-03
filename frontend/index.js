@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Redirigir después de un breve delay
                 setTimeout(() => {
-                    window.location.href = 'frontend/html/home.html';
+                    window.location.href = '/html/home.html';
                 }, 1000);
             } else {
                 showError(result.error);
